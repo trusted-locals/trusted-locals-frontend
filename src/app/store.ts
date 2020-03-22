@@ -6,9 +6,9 @@ export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof rootReducer>;
 
 const rootReducer = combineReducers({
-  counter: counterReducer
+  counter: counterReducer,
 });
 
 export const store = configureStore({
-  reducer: rootReducer
+  reducer: rootReducer,
 });

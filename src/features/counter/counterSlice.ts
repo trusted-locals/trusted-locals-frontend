@@ -1,9 +1,10 @@
+/* eslint-disable */
 import { createSlice } from '@reduxjs/toolkit';
 
 export const slice = createSlice({
   name: 'counter',
   initialState: {
-    value: 0
+    value: 0,
   },
   reducers: {
     increment: state => {
@@ -18,8 +19,8 @@ export const slice = createSlice({
     },
     incrementByAmount: (state, action) => {
       state.value += action.payload;
-    }
-  }
+    },
+  },
 });
 
 export const { increment, decrement, incrementByAmount } = slice.actions;
@@ -40,3 +41,4 @@ export const incrementAsync = (amount: any) => (dispatch: any) => {
 export const selectCount = (state: any) => state.counter.value;
 
 export const counterReducer = slice.reducer;
+/* eslint-enable */

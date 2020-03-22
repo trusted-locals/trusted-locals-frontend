@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { CSSReset, theme, ThemeProvider } from '@chakra-ui/core';
 
@@ -10,7 +10,7 @@ const ROOT_PATH = '/';
 const LOGIN_PATH = '/login';
 const REGISRATION_PATH = '/register';
 
-export const App = () => {
+export const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CSSReset />

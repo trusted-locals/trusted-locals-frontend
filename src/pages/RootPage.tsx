@@ -1,5 +1,5 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-export const RootPage = () => {
+export const RootPage: FC = () => {
   return <h1>Hello World!</h1>;
 };
