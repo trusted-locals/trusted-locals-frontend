@@ -1,5 +1,17 @@
 import React, { FC, useState } from 'react';
-import { Box, Button, FormControl, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/core';
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+} from '@chakra-ui/core';
+
+import { fetch } from '../utils/fetch';
 
 const MIN_LENGTH_USERNAME = 3;
 const MAX_LENGTH_USERNAME = 16;
@@ -18,11 +30,36 @@ export const RegistrationPage: FC = () => {
 
   const [shouldShowPassword, setShouldShowPassword] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   return (
     <Box maxWidth='500px'>
       <form
-        onSubmit={(e) => {
+        onSubmit={(e): void => {
           e.preventDefault();
+
+          fetch('/user', {
+            fetchOptions: {
+              body: JSON.stringify({
+                email,
+                password,
+                username,
+              }),
+              method: 'POST',
+            },
+            onStart: () => {
+              setIsLoading(true);
+            },
+            // eslint-disable-next-line
+            onSuccess: (data: object) => {},
+            onFailure: ({ errorMessage }) => {
+              setErrorMessage(errorMessage);
+            },
+            onEnd: () => {
+              setIsLoading(false);
+            },
+          });
         }}
       >
         <FormControl {...containerProps}>
@@ -72,7 +109,7 @@ export const RegistrationPage: FC = () => {
                 aria-label='toggle password visibility'
                 height='75%'
                 size='sm'
-                onClick={() => {
+                onClick={(): void => {
                   setShouldShowPassword(!shouldShowPassword);
                 }}
               >
@@ -81,10 +118,16 @@ export const RegistrationPage: FC = () => {
             </InputRightElement>
           </InputGroup>
         </FormControl>
-        <Button marginTop={6} variantColor='teal' type='submit'>
+        <Button isLoading={isLoading} marginTop={6} variantColor='teal' type='submit'>
           Register
         </Button>
       </form>
+      {errorMessage && (
+        <Alert marginTop={6} status='error' variant='left-accent'>
+          <AlertIcon />
+          {errorMessage}
+        </Alert>
+      )}
     </Box>
   );
 };
