@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { HashRouter, Link, Route, Switch } from 'react-router-dom';
 import { Box, CSSReset, theme, ThemeProvider } from '@chakra-ui/core';
 
-import { LoginPage } from './pages/LoginPage';
-import { RegistrationPage } from './pages/RegistrationPage';
-import { RootPage } from './pages/RootPage';
+import { LoginPage } from '../pages/LoginPage';
+import { RegistrationPage } from '../pages/RegistrationPage';
+import { RootPage } from '../pages/RootPage';
 
 const ROOT_PATH = '/';
 const LOGIN_PATH = '/login';
@@ -27,7 +27,7 @@ export const App: FC = () => {
             '70%',
           ]}
         >
-          <Router>
+          <HashRouter basename='/'>
             <nav>
               <ul>
                 <li>
@@ -53,7 +53,7 @@ export const App: FC = () => {
                 <RootPage />
               </Route>
             </Switch>
-          </Router>
+          </HashRouter>
         </Box>
       </Box>
     </ThemeProvider>
