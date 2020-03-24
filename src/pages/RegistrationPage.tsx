@@ -43,11 +43,8 @@ export const RegistrationPage: FC = () => {
               setIsLoading(true);
             },
             // eslint-disable-next-line
-            onSuccess: (data: { success: boolean }) => {
-              debugger;
-            },
+            onSuccess: (data: { success: boolean }) => {},
             onFailure: ({ errorMessage }) => {
-              debugger;
               setErrorMessage(errorMessage);
             },
             onEnd: () => {

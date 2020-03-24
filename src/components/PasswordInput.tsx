@@ -18,7 +18,7 @@ export const PasswordInput: FC<Props> = ({
   password,
   setIsPasswordVisible,
   setPassword,
-}) => (
+}: Props) => (
   <FormControl {...containerStyles}>
     <FormLabel htmlFor='password'>Password</FormLabel>
     <InputGroup size='md'>
