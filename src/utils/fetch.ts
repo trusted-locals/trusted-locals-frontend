@@ -5,7 +5,7 @@ export function fetch<D>(
   options: {
     fetchOptions: Parameters<typeof window.fetch>[1];
     onEnd?: () => void;
-    onFailure: (error: { errorMessage: string; statusCode: number }) => void;
+    onFailure: (error: { errorMessage: string }) => void;
     onStart?: () => void;
     onSuccess: (data: D) => void;
   },
@@ -13,7 +13,12 @@ export function fetch<D>(
   options.onStart?.();
 
   return window
-    .fetch(getEndpointURL() + path, options.fetchOptions)
+    .fetch(getEndpointURL() + path, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...options.fetchOptions,
+    })
     .then((response: Response) => {
       return response.json().then((json) => {
         if (response.ok) {
@@ -29,7 +34,6 @@ export function fetch<D>(
     .catch((error) => {
       options.onFailure({
         errorMessage: error.errorMessage || 'An unknown error has occured.',
-        statusCode: error.statusCode || 500,
       });
     })
     .finally(() => {

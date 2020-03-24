@@ -1,34 +1,23 @@
 import React, { FC, useState } from 'react';
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-} from '@chakra-ui/core';
+import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/core';
+
+import { PasswordInput } from '../components/PasswordInput';
 
 import { fetch } from '../utils/fetch';
 
 const MIN_LENGTH_USERNAME = 3;
 const MAX_LENGTH_USERNAME = 16;
 
-const MIN_LENGTH_PASSWORD = 8;
-const MAX_LENGTH_PASSWORD = 64;
-
-const containerProps = {
+const containerStyles = {
   marginTop: 4,
 };
 
 export const RegistrationPage: FC = () => {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [shouldShowPassword, setShouldShowPassword] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -42,9 +31,11 @@ export const RegistrationPage: FC = () => {
           fetch('/user', {
             fetchOptions: {
               body: JSON.stringify({
+                // TODO: Country/City in registration flow
+                country: 'test-country',
                 email,
+                name,
                 password,
-                username,
               }),
               method: 'POST',
             },
@@ -52,8 +43,11 @@ export const RegistrationPage: FC = () => {
               setIsLoading(true);
             },
             // eslint-disable-next-line
-            onSuccess: (data: object) => {},
+            onSuccess: (data: { success: boolean }) => {
+              debugger;
+            },
             onFailure: ({ errorMessage }) => {
+              debugger;
               setErrorMessage(errorMessage);
             },
             onEnd: () => {
@@ -62,7 +56,7 @@ export const RegistrationPage: FC = () => {
           });
         }}
       >
-        <FormControl {...containerProps}>
+        <FormControl {...containerStyles}>
           <FormLabel htmlFor='username'>Username</FormLabel>
           <Input
             id='username'
@@ -71,13 +65,13 @@ export const RegistrationPage: FC = () => {
             minLength={MIN_LENGTH_USERNAME}
             // @ts-ignore
             onChange={({ target }): void => {
-              setUsername(target.value);
+              setName(target.value);
             }}
             type='text'
-            value={username}
+            value={name}
           />
         </FormControl>
-        <FormControl {...containerProps}>
+        <FormControl {...containerStyles}>
           <FormLabel htmlFor='email'>Email address</FormLabel>
           <Input
             isRequired
@@ -90,34 +84,13 @@ export const RegistrationPage: FC = () => {
             value={email}
           />
         </FormControl>
-        <FormControl {...containerProps}>
-          <FormLabel htmlFor='password'>Password</FormLabel>
-          <InputGroup size='md'>
-            <Input
-              id='password'
-              maxLength={MAX_LENGTH_PASSWORD}
-              minLength={MIN_LENGTH_PASSWORD}
-              // @ts-ignore
-              onChange={({ target }): void => {
-                setPassword(target.value);
-              }}
-              value={password}
-              type={shouldShowPassword ? 'text' : 'password'}
-            />
-            <InputRightElement width='4.5rem'>
-              <Button
-                aria-label='toggle password visibility'
-                height='75%'
-                size='sm'
-                onClick={(): void => {
-                  setShouldShowPassword(!shouldShowPassword);
-                }}
-              >
-                {shouldShowPassword ? 'Hide' : 'Show'}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </FormControl>
+        <PasswordInput
+          containerStyles={containerStyles}
+          isPasswordVisible={isPasswordVisible}
+          password={password}
+          setIsPasswordVisible={setIsPasswordVisible}
+          setPassword={setPassword}
+        />
         <Button isLoading={isLoading} marginTop={6} variantColor='teal' type='submit'>
           Register
         </Button>
