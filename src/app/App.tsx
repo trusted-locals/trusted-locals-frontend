@@ -1,10 +1,22 @@
-import React, { FC } from 'react';
+import React, { FC, lazy, Suspense } from 'react';
 import { HashRouter, Link, Route, Switch } from 'react-router-dom';
 import { Box, CSSReset, theme, ThemeProvider } from '@chakra-ui/core';
 
-import { LoginPage } from '../pages/LoginPage';
-import { RegistrationPage } from '../pages/RegistrationPage';
 import { RootPage } from '../pages/RootPage';
+
+import { DelayedFallback } from '../components/DelayedFallback';
+
+const LoginPage = lazy(() =>
+  import('../pages/LoginPage').then(({ LoginPage }) => ({
+    default: LoginPage,
+  })),
+);
+
+const RegistrationPage = lazy(() =>
+  import('../pages/RegistrationPage').then(({ RegistrationPage }) => ({
+    default: RegistrationPage,
+  })),
+);
 
 const ROOT_PATH = '/';
 const LOGIN_PATH = '/login';
@@ -44,10 +56,14 @@ export const App: FC = () => {
 
             <Switch>
               <Route path={LOGIN_PATH}>
-                <LoginPage />
+                <Suspense fallback={<DelayedFallback />}>
+                  <LoginPage />
+                </Suspense>
               </Route>
               <Route path={REGISRATION_PATH}>
-                <RegistrationPage />
+                <Suspense fallback={<DelayedFallback />}>
+                  <RegistrationPage />
+                </Suspense>
               </Route>
               <Route path={ROOT_PATH}>
                 <RootPage />
