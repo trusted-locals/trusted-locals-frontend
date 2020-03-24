@@ -18,3 +18,22 @@ jobs:
         run: yarn lint
       - name: Test
         run: CI=true yarn test
+  lighthouse-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - run: yarn
+      - name: Run Lighthouse
+        uses: foo-software/lighthouse-check-action@master
+        id: lighthouseCheck
+        with:
+          urls: 'https://trusted-locals.github.io/,https://trusted-locals.github.io/#/login,https://trusted-locals.github.io/#/register'
+      - name: Handle Lighthouse Check results
+        uses: foo-software/lighthouse-check-status-action@master
+        with:
+          lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
+          minAccessibilityScore: '80'
+          minBestPracticesScore: '80'
+          minPerformanceScore: '80'
+          minProgressiveWebAppScore: '80'
+          minSeoScore: '80'
