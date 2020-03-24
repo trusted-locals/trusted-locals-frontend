@@ -14,6 +14,7 @@ export function fetch<D>(
 
   return window
     .fetch(getEndpointURL() + path, {
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },

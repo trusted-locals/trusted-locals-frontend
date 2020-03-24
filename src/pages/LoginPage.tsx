@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Input, Link } from '@chakra-ui/core';
 
 import { PasswordInput } from '../components/PasswordInput';
@@ -13,6 +14,8 @@ const containerStyles = {
 };
 
 export const LoginPage: FC = () => {
+  const history = useHistory();
+
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
@@ -38,8 +41,9 @@ export const LoginPage: FC = () => {
             onStart: () => {
               setIsLoading(true);
             },
-            // eslint-disable-next-line
-            onSuccess: (data: object) => {},
+            onSuccess: (_data: { success: boolean; token: string }) => {
+              history.push('/');
+            },
             onFailure: ({ errorMessage }) => {
               setErrorMessage(errorMessage);
             },
