@@ -1,12 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { counterReducer } from '../features/counter/counterSlice';
+import { userReducer } from '../features/user/userSlice';
 
 export type AppDispatch = typeof store.dispatch;
 
 export type RootState = ReturnType<typeof rootReducer>;
 
 const rootReducer = combineReducers({
-  counter: counterReducer,
+  user: userReducer,
 });
 
 export const store = configureStore({

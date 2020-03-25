@@ -2,18 +2,20 @@ import React, { FC, lazy, Suspense } from 'react';
 import { HashRouter, Link, Route, Switch } from 'react-router-dom';
 import { Box, CSSReset, theme, ThemeProvider } from '@chakra-ui/core';
 
-import { RootPage } from '../pages/RootPage';
+import { FeedPage } from '../features/feed/FeedPage';
 
 import { DelayedFallback } from '../components/DelayedFallback';
 
+import { ROUTER_BASENAME } from './router';
+
 const LoginPage = lazy(() =>
-  import('../pages/LoginPage').then(({ LoginPage }) => ({
+  import('../features/user/LoginPage').then(({ LoginPage }) => ({
     default: LoginPage,
   })),
 );
 
 const RegistrationPage = lazy(() =>
-  import('../pages/RegistrationPage').then(({ RegistrationPage }) => ({
+  import('../features/user/RegistrationPage').then(({ RegistrationPage }) => ({
     default: RegistrationPage,
   })),
 );
@@ -39,7 +41,7 @@ export const App: FC = () => {
             '70%',
           ]}
         >
-          <HashRouter basename='/'>
+          <HashRouter basename={ROUTER_BASENAME}>
             <nav>
               <ul>
                 <li>
@@ -66,7 +68,7 @@ export const App: FC = () => {
                 </Suspense>
               </Route>
               <Route path={ROOT_PATH}>
-                <RootPage />
+                <FeedPage />
               </Route>
             </Switch>
           </HashRouter>

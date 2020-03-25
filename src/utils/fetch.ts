@@ -1,24 +1,21 @@
-const getEndpointURL = (): string => 'http://localhost:8080';
-
-export function fetch<D>(
-  path: string,
-  options: {
-    fetchOptions: Parameters<typeof window.fetch>[1];
-    onEnd?: () => void;
-    onFailure: (error: { errorMessage: string }) => void;
-    onStart?: () => void;
-    onSuccess: (data: D) => void;
+const DEFAULT_OPTIONS: Parameters<typeof window.fetch>[1] = {
+  credentials: 'include',
+  headers: {
+    'Content-Type': 'application/json',
   },
-): Promise<void> {
-  options.onStart?.();
+};
 
+const ENDPOINT_URL = 'http://localhost:8080';
+
+type ErrorType = {
+  errorMessage: string;
+};
+
+export function fetch<D>(path: string, options?: object): Promise<D | ErrorType> {
   return window
-    .fetch(getEndpointURL() + path, {
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      ...options.fetchOptions,
+    .fetch(ENDPOINT_URL + path, {
+      ...DEFAULT_OPTIONS,
+      ...options,
     })
     .then((response: Response) => {
       return response.json().then((json) => {
@@ -29,15 +26,7 @@ export function fetch<D>(
         throw json;
       });
     })
-    .then((json: D) => {
-      options.onSuccess(json);
-    })
     .catch((error) => {
-      options.onFailure({
-        errorMessage: error.errorMessage || 'An unknown error has occured.',
-      });
-    })
-    .finally(() => {
-      options.onEnd?.();
+      throw new Error(error.errorMessage || 'An unknown error has occured.');
     });
 }

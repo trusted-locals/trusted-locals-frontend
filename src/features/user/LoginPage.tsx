@@ -1,10 +1,10 @@
 import React, { FC, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Input, Link } from '@chakra-ui/core';
 
-import { PasswordInput } from '../components/PasswordInput';
+import { PasswordInput } from '../../components/PasswordInput';
 
-import { fetch } from '../utils/fetch';
+import { loggedIn, selectAsync } from './userSlice';
 
 const MIN_LENGTH_USERNAME = 3;
 const MAX_LENGTH_USERNAME = 16;
@@ -14,15 +14,13 @@ const containerStyles = {
 };
 
 export const LoginPage: FC = () => {
-  const history = useHistory();
+  const dispatch = useDispatch();
+  const { error, loading } = useSelector(selectAsync);
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   return (
     <Box maxWidth='500px'>
@@ -30,27 +28,12 @@ export const LoginPage: FC = () => {
         onSubmit={(e): void => {
           e.preventDefault();
 
-          fetch('/user/login', {
-            fetchOptions: {
-              body: JSON.stringify({
-                name,
-                password,
-              }),
-              method: 'POST',
-            },
-            onStart: () => {
-              setIsLoading(true);
-            },
-            onSuccess: (_data: { success: boolean; token: string }) => {
-              history.push('/');
-            },
-            onFailure: ({ errorMessage }) => {
-              setErrorMessage(errorMessage);
-            },
-            onEnd: () => {
-              setIsLoading(false);
-            },
-          });
+          dispatch(
+            loggedIn({
+              name,
+              password,
+            }),
+          );
         }}
       >
         <FormControl {...containerStyles}>
@@ -76,7 +59,7 @@ export const LoginPage: FC = () => {
           setPassword={setPassword}
         />
         <Box display='flex' justifyContent='space-between' marginTop={6}>
-          <Button isLoading={isLoading} variantColor='teal' type='submit'>
+          <Button isLoading={loading === 'pending'} variantColor='teal' type='submit'>
             Login
           </Button>
           {/* TODO: Link */}
@@ -87,10 +70,10 @@ export const LoginPage: FC = () => {
           </Link>
         </Box>
       </form>
-      {errorMessage && (
+      {error && (
         <Alert marginTop={6} status='error' variant='left-accent'>
           <AlertIcon />
-          {errorMessage}
+          {error}
         </Alert>
       )}
     </Box>
