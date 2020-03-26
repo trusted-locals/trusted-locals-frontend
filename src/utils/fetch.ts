@@ -5,7 +5,8 @@ const DEFAULT_OPTIONS: Parameters<typeof window.fetch>[1] = {
   },
 };
 
-const ENDPOINT_URL = 'http://localhost:8080';
+const ENDPOINT_URL =
+  process.env.NODE_ENV === 'production' ? 'https://ec2-54-89-76-249.compute-1.amazonaws.com' : 'http://localhost:8080';
 
 type ErrorType = {
   errorMessage: string;
