@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Input, Link } from '@chakra-ui/core';
 
@@ -6,6 +7,7 @@ import { PasswordInput } from '../../components/PasswordInput';
 
 import { loggedIn, selectAsync } from './userSlice';
 
+import { RESET_PASSWORD_PATH } from '../../components/TabBar';
 import { responsiveBoxProps } from '../../app/styles';
 
 const MIN_LENGTH_USERNAME = 3;
@@ -15,7 +17,7 @@ const containerStyles = {
   marginTop: 4,
 };
 
-export const LoginPage: FC = () => {
+export const Login: FC = () => {
   const dispatch = useDispatch();
   const { error, loading } = useSelector(selectAsync);
 
@@ -64,11 +66,12 @@ export const LoginPage: FC = () => {
           <Button isLoading={loading === 'pending'} type='submit' variantColor='blue'>
             Login
           </Button>
-          {/* TODO: Link */}
-          <Link display='flex' href='/'>
-            <Button variant='link' size='sm'>
-              Forgot password?
-            </Button>
+          <Link alignItems='center' as='span' display='flex'>
+            <RouterLink to={RESET_PASSWORD_PATH}>
+              <Button variant='link' size='sm'>
+                Forgot password?
+              </Button>
+            </RouterLink>
           </Link>
         </Box>
       </form>

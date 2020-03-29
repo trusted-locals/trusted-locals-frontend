@@ -15,7 +15,7 @@ const containerStyles = {
   marginTop: 4,
 };
 
-export const RegistrationPage: FC = () => {
+export const Registration: FC = () => {
   const dispatch = useDispatch();
   const { error, loading } = useSelector(selectAsync);
 

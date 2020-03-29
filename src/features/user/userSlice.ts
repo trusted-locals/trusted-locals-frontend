@@ -13,6 +13,7 @@ type AsyncState = {
 
 type State = {
   async: AsyncState;
+  isLoggedIn: boolean;
 };
 
 const SLICE_NAME = 'user';
@@ -44,6 +45,7 @@ export const loggedIn = createAsyncThunk(`${SLICE_NAME}/loggedIn`, (body: LoginB
     method: 'POST',
   }).then((data) => {
     history.push('/');
+    localStorage.setItem('token', data.token);
     return data;
   }),
 );
@@ -65,6 +67,7 @@ export const slice = createSlice({
       error: null,
       loading: 'idle',
     },
+    isLoggedIn: false,
   } as State,
   reducers: {},
   extraReducers: {
@@ -76,6 +79,7 @@ export const slice = createSlice({
     [loggedIn.fulfilled.type]: (state, _action: PayloadAction<LoginSuccess>): void => {
       if (state.async.loading === 'pending') {
         state.async.loading = 'idle';
+        state.isLoggedIn = true;
       }
     },
     [loggedIn.rejected.type]: (state, action: { error: Error }): void => {
@@ -92,6 +96,7 @@ export const slice = createSlice({
     [registered.fulfilled.type]: (state, _action: PayloadAction<RegistrationSuccess>): void => {
       if (state.async.loading === 'pending') {
         state.async.loading = 'idle';
+        state.isLoggedIn = true;
       }
     },
     [registered.rejected.type]: (state, action: { error: Error }): void => {
@@ -100,6 +105,7 @@ export const slice = createSlice({
         state.async.error = action.error.message;
       }
     },
+    // TODO: Logout
   },
 });
 
@@ -107,6 +113,12 @@ export const selectAsync = (state: RootState): State['async'] =>
   createSelector(
     (state: RootState) => state.user.async,
     (async) => async,
+  )(state);
+
+export const selectIsLoggedIn = (state: RootState): State['isLoggedIn'] =>
+  createSelector(
+    (state: RootState) => state.user.isLoggedIn,
+    (isLoggedIn) => isLoggedIn,
   )(state);
 
 export const userReducer = slice.reducer;
