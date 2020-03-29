@@ -74,6 +74,9 @@ export const slice = createSlice({
     authTokenChecked: (state, action: PayloadAction<{ authTokenExists: boolean }>): void => {
       state.isLoggedIn = action.payload.authTokenExists;
     },
+    loggedOut: (state): void => {
+      state.isLoggedIn = false;
+    },
   },
   extraReducers: {
     [loggedIn.pending.type]: (state): void => {
@@ -110,11 +113,10 @@ export const slice = createSlice({
         state.async.error = action.error.message;
       }
     },
-    // TODO: Logout
   },
 });
 
-export const { authTokenChecked } = slice.actions;
+export const { authTokenChecked, loggedOut } = slice.actions;
 
 export const selectAsync = (state: RootState): State['async'] =>
   createSelector(

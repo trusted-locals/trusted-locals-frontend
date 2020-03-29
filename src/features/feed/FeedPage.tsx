@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
-import { Tab, TabList, TabPanels, Tabs } from '@chakra-ui/core';
+import { Box, Tab, TabList, TabPanels, Tabs } from '@chakra-ui/core';
 
 import { Feed } from './Feed';
 import { FeedHeader } from './FeedHeader';
@@ -27,13 +27,37 @@ const tabs: {
   { id: ARIA_ADVICE_TAB, name: 'Advice', to: ADVICE_PATH },
 ];
 
+const tabsProps = {
+  marginTop: 6,
+};
+
+type TabsWrapperProps = {
+  children: React.ReactNode;
+};
+
+// Workaround for showing smaller text on mobile.
+const TabsWrapper: FC<TabsWrapperProps> = ({ children }: TabsWrapperProps) => (
+  <>
+    <Box display={['block', 'none']}>
+      <Tabs {...tabsProps} size='sm'>
+        {children}
+      </Tabs>
+    </Box>
+    <Box display={['none', 'block']}>
+      <Tabs {...tabsProps} size='md'>
+        {children}
+      </Tabs>
+    </Box>
+  </>
+);
+
 export const FeedPage: FC = () => {
   const { pathname } = useLocation();
 
   return (
     <>
       <FeedHeader />
-      <Tabs marginTop={6}>
+      <TabsWrapper>
         <TabList id={ARIA_TABS}>
           {tabs.map(({ id, name, to }) => (
             <Tab
@@ -60,7 +84,7 @@ export const FeedPage: FC = () => {
             <Redirect from='/' to={NEWS_PATH} />
           </Switch>
         </TabPanels>
-      </Tabs>
+      </TabsWrapper>
     </>
   );
 };

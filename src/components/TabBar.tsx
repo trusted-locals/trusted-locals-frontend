@@ -1,13 +1,17 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { FC, lazy } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { Redirect, Switch, useLocation } from 'react-router-dom';
 import { Box, IconButtonProps } from '@chakra-ui/core';
 
-import { DelayedFallback } from './DelayedFallback';
+import { AppRoute } from '../app/AppRoute';
 import { FeedPage } from '../features/feed/FeedPage';
 import { TabBarButton } from './TabBarButton';
 
 import { selectIsLoggedIn } from '../features/user/userSlice';
+
+import { AppRoutes } from '../app/router';
+
+const FEED_PATH: AppRoutes = '/feed';
 
 const Submit = lazy(() =>
   import('../features/submit/Submit').then(({ Submit }) => ({
@@ -18,6 +22,12 @@ const Submit = lazy(() =>
 const Profile = lazy(() =>
   import('../features/user/Profile').then(({ Profile }) => ({
     default: Profile,
+  })),
+);
+
+const Account = lazy(() =>
+  import('../features/user/Account').then(({ Account }) => ({
+    default: Account,
   })),
 );
 
@@ -39,26 +49,24 @@ const Registration = lazy(() =>
   })),
 );
 
-const FEED_PATH = '/feed';
-const SUBMIT_PATH = '/submit';
-const PROFILE_PATH = '/profile';
-const LOGIN_PATH = '/login';
-export const RESET_PASSWORD_PATH = '/login/reset-password';
-const REGISRATION_PATH = '/register';
+const Page404 = lazy(() =>
+  import('./Page404').then(({ Page404 }) => ({
+    default: Page404,
+  })),
+);
 
 const buttons: {
   [key: string]: {
     ariaLabel: string;
     icon: IconButtonProps['icon'];
     name: string;
-    to: string;
+    to: AppRoutes;
   };
 } = {
-  home: { ariaLabel: 'home button', icon: 'view', name: 'Home', to: FEED_PATH },
-  submit: { ariaLabel: 'submit button', icon: 'plus-square', name: 'Submit', to: SUBMIT_PATH },
-  profile: { ariaLabel: 'profile button', icon: 'settings', name: 'Profile', to: PROFILE_PATH },
-  login: { ariaLabel: 'login button', icon: 'settings', name: 'Login', to: LOGIN_PATH },
-  register: { ariaLabel: 'registration button', icon: 'settings', name: 'Register', to: REGISRATION_PATH },
+  home: { ariaLabel: 'home button', icon: 'view', name: 'Home', to: '/feed' },
+  submit: { ariaLabel: 'submit button', icon: 'plus-square', name: 'Submit', to: '/submit' },
+  profile: { ariaLabel: 'profile button', icon: 'settings', name: 'Profile', to: '/profile' },
+  account: { ariaLabel: 'account button', icon: 'settings', name: 'Account', to: '/account' },
 };
 
 const loggedInButtons = {
@@ -70,8 +78,7 @@ const loggedInButtons = {
 const loggedOutButtons = {
   home: buttons.home,
   submit: buttons.submit,
-  login: buttons.login,
-  register: buttons.register,
+  account: buttons.account,
 };
 
 const getButtons = (loggedIn: boolean): typeof buttons[number][] =>
@@ -86,35 +93,66 @@ export const TabBar: FC<{}> = () => {
   return (
     <>
       <Switch>
-        <Route path={FEED_PATH}>
+        <AppRoute lazyload={false} path='/feed'>
           <FeedPage />
-        </Route>
-        <Route path={SUBMIT_PATH}>
-          <Suspense fallback={<DelayedFallback />}>
-            <Submit />
-          </Suspense>
-        </Route>
-        <Route path={PROFILE_PATH}>
-          <Suspense fallback={<DelayedFallback />}>
-            <Profile />
-          </Suspense>
-        </Route>
-        <Route path={RESET_PASSWORD_PATH}>
-          <Suspense fallback={<DelayedFallback />}>
-            <ResetPassword />
-          </Suspense>
-        </Route>
-        <Route path={LOGIN_PATH}>
-          <Suspense fallback={<DelayedFallback />}>
-            <Login />
-          </Suspense>
-        </Route>
-        <Route path={REGISRATION_PATH}>
-          <Suspense fallback={<DelayedFallback />}>
-            <Registration />
-          </Suspense>
-        </Route>
-        <Redirect from='/' to={FEED_PATH} />
+        </AppRoute>
+        <AppRoute lazyload path='/submit'>
+          <Submit />
+        </AppRoute>
+        <AppRoute
+          lazyload
+          path='/profile'
+          redirect={{
+            path: '/account',
+            when: 'logged-out',
+          }}
+        >
+          <Profile />
+        </AppRoute>
+        <AppRoute
+          lazyload
+          path='/account/reset-password'
+          redirect={{
+            path: '/profile',
+            when: 'logged-in',
+          }}
+        >
+          <ResetPassword />
+        </AppRoute>
+        <AppRoute
+          lazyload
+          path='/account/login'
+          redirect={{
+            path: '/profile',
+            when: 'logged-in',
+          }}
+        >
+          <Login />
+        </AppRoute>
+        <AppRoute
+          lazyload
+          path='/account/register'
+          redirect={{
+            path: '/profile',
+            when: 'logged-in',
+          }}
+        >
+          <Registration />
+        </AppRoute>
+        <AppRoute
+          lazyload
+          path='/account'
+          redirect={{
+            path: '/profile',
+            when: 'logged-in',
+          }}
+        >
+          <Account />
+        </AppRoute>
+        <Redirect exact from='/' to={FEED_PATH} />
+        <AppRoute lazyload path={null}>
+          <Page404 />
+        </AppRoute>
       </Switch>
 
       <nav>

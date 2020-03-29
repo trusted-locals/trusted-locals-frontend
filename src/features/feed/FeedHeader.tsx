@@ -16,6 +16,7 @@ const Location: FC<{}> = () => (
 
 export const FeedHeader: FC<Props> = (_props: Props) => (
   <Box paddingX={4}>
+    {/* TODO: Logged out */}
     <Text color='gray.600' fontSize='lg'>
       Good morning, {NAME_PLACEHOLDER}
     </Text>

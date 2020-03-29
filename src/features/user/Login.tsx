@@ -7,11 +7,14 @@ import { PasswordInput } from '../../components/PasswordInput';
 
 import { loggedIn, selectAsync } from './userSlice';
 
-import { RESET_PASSWORD_PATH } from '../../components/TabBar';
 import { responsiveBoxProps } from '../../app/styles';
 
+import { AppRoutes } from '../../app/router';
+
+const RESET_PASSWORD_PATH: AppRoutes = '/account/reset-password';
+
 const MIN_LENGTH_USERNAME = 3;
-const MAX_LENGTH_USERNAME = 16;
+const MAX_LENGTH_USERNAME = 64;
 
 const containerStyles = {
   marginTop: 4,
