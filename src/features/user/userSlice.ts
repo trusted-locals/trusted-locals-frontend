@@ -6,6 +6,9 @@ import { fetch } from '../../utils/fetch';
 
 import { RootState } from '../../app/store';
 
+const SLICE_NAME = 'user';
+export const LOCAL_STORAGE_AUTH_TOKEN_KEY = 'token';
+
 type AsyncState = {
   error: string | null;
   loading: 'idle' | 'pending';
@@ -15,8 +18,6 @@ type State = {
   async: AsyncState;
   isLoggedIn: boolean;
 };
-
-const SLICE_NAME = 'user';
 
 type LoginBody = {
   name: string;
@@ -45,7 +46,7 @@ export const loggedIn = createAsyncThunk(`${SLICE_NAME}/loggedIn`, (body: LoginB
     method: 'POST',
   }).then((data) => {
     history.push('/');
-    localStorage.setItem('token', data.token);
+    localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_KEY, data.token);
     return data;
   }),
 );
@@ -69,7 +70,11 @@ export const slice = createSlice({
     },
     isLoggedIn: false,
   } as State,
-  reducers: {},
+  reducers: {
+    authTokenChecked: (state, action: PayloadAction<{ authTokenExists: boolean }>): void => {
+      state.isLoggedIn = action.payload.authTokenExists;
+    },
+  },
   extraReducers: {
     [loggedIn.pending.type]: (state): void => {
       if (state.async.loading === 'idle') {
@@ -108,6 +113,8 @@ export const slice = createSlice({
     // TODO: Logout
   },
 });
+
+export const { authTokenChecked } = slice.actions;
 
 export const selectAsync = (state: RootState): State['async'] =>
   createSelector(
