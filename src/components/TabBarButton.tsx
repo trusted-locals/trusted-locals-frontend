@@ -15,12 +15,16 @@ export const TabBarButton: FC<Props> = ({ ariaLabel, icon, isActive, name, to }:
     <Box alignItems='center' display='flex' flexDirection='column' paddingY={2}>
       <IconButton
         aria-label={ariaLabel}
+        as='span'
         icon={icon}
-        size='sm'
-        variant={isActive ? 'solid' : 'outline'}
-        variantColor='teal'
+        isActive={isActive}
+        size='md'
+        variant='link'
+        variantColor='gray'
       />
-      <Text fontSize='sm'>{name}</Text>
+      <Text as='span' color={isActive ? 'black' : 'gray.600'} fontSize='sm'>
+        {name}
+      </Text>
     </Box>
   </Link>
 );

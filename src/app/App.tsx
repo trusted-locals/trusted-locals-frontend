@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { HashRouter } from 'react-router-dom';
-import { CSSReset, theme, ThemeProvider } from '@chakra-ui/core';
+import { Box, CSSReset, theme, ThemeProvider } from '@chakra-ui/core';
 
 import { TabBar } from '../components/TabBar';
 
@@ -11,7 +11,9 @@ export const App: FC = () => {
     <ThemeProvider theme={theme}>
       <CSSReset />
       <HashRouter basename={ROUTER_BASENAME}>
-        <TabBar />
+        <Box marginTop={4}>
+          <TabBar />
+        </Box>
       </HashRouter>
     </ThemeProvider>
   );

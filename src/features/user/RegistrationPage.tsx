@@ -6,6 +6,8 @@ import { registered, selectAsync } from './userSlice';
 
 import { PasswordInput } from '../../components/PasswordInput';
 
+import { responsiveBoxProps } from '../../app/styles';
+
 const MIN_LENGTH_USERNAME = 3;
 const MAX_LENGTH_USERNAME = 16;
 
@@ -24,7 +26,7 @@ export const RegistrationPage: FC = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
-    <Box maxWidth='500px'>
+    <Box {...responsiveBoxProps} maxWidth='500px'>
       <form
         onSubmit={(e): void => {
           e.preventDefault();
@@ -75,7 +77,7 @@ export const RegistrationPage: FC = () => {
           setIsPasswordVisible={setIsPasswordVisible}
           setPassword={setPassword}
         />
-        <Button isLoading={loading === 'pending'} marginTop={6} variantColor='teal' type='submit'>
+        <Button isLoading={loading === 'pending'} marginTop={6} type='submit' variantColor='blue'>
           Register
         </Button>
       </form>

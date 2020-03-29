@@ -6,6 +6,8 @@ import { PasswordInput } from '../../components/PasswordInput';
 
 import { loggedIn, selectAsync } from './userSlice';
 
+import { responsiveBoxProps } from '../../app/styles';
+
 const MIN_LENGTH_USERNAME = 3;
 const MAX_LENGTH_USERNAME = 16;
 
@@ -23,7 +25,7 @@ export const LoginPage: FC = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
-    <Box maxWidth='500px'>
+    <Box {...responsiveBoxProps} maxWidth='500px'>
       <form
         onSubmit={(e): void => {
           e.preventDefault();
@@ -59,7 +61,7 @@ export const LoginPage: FC = () => {
           setPassword={setPassword}
         />
         <Box display='flex' justifyContent='space-between' marginTop={6}>
-          <Button isLoading={loading === 'pending'} variantColor='teal' type='submit'>
+          <Button isLoading={loading === 'pending'} type='submit' variantColor='blue'>
             Login
           </Button>
           {/* TODO: Link */}

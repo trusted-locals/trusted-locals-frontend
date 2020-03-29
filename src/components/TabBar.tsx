@@ -1,5 +1,5 @@
 import React, { FC, lazy, Suspense } from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { Box, IconButtonProps } from '@chakra-ui/core';
 
 import { DelayedFallback } from './DelayedFallback';
@@ -18,7 +18,7 @@ const RegistrationPage = lazy(() =>
   })),
 );
 
-const FEED_PATH = '/';
+const FEED_PATH = '/feed';
 const LOGIN_PATH = '/login';
 const REGISRATION_PATH = '/register';
 
@@ -38,42 +38,28 @@ export const TabBar: FC<{}> = () => {
 
   return (
     <>
-      <Box minHeight='inherit' padding='2rem'>
-        <Box
-          display='flex'
-          flexDirection='column'
-          margin='0 auto'
-          width={[
-            '100%', // base
-            '90%', // 480px upwards
-            '90%', // 768px upwards
-            '80%', // 992px upwards
-            '70%',
-          ]}
-        >
-          <Switch>
-            <Route path={LOGIN_PATH}>
-              <Suspense fallback={<DelayedFallback />}>
-                <LoginPage />
-              </Suspense>
-            </Route>
-            <Route path={REGISRATION_PATH}>
-              <Suspense fallback={<DelayedFallback />}>
-                <RegistrationPage />
-              </Suspense>
-            </Route>
-            <Route path={FEED_PATH}>
-              <FeedPage />
-            </Route>
-          </Switch>
-        </Box>
-      </Box>
+      <Switch>
+        <Route path={LOGIN_PATH}>
+          <Suspense fallback={<DelayedFallback />}>
+            <LoginPage />
+          </Suspense>
+        </Route>
+        <Route path={REGISRATION_PATH}>
+          <Suspense fallback={<DelayedFallback />}>
+            <RegistrationPage />
+          </Suspense>
+        </Route>
+        <Route path={FEED_PATH}>
+          <FeedPage />
+        </Route>
+        <Redirect from='/' to={FEED_PATH} />
+      </Switch>
 
       <nav>
         <Box borderTop='1px solid lightgray' bottom='0' display='flex' position='fixed' width='100%'>
           {buttons.map((buttonProps) => (
             <Box flex='1 1 0' key={buttonProps.name}>
-              <TabBarButton {...buttonProps} isActive={location.pathname === buttonProps.to} />
+              <TabBarButton {...buttonProps} isActive={location.pathname.startsWith(buttonProps.to)} />
             </Box>
           ))}
         </Box>
