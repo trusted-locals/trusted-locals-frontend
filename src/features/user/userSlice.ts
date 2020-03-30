@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { history } from '../../app/router';
-
 import { fetch } from '../../utils/fetch';
 
 import { RootState } from '../../app/store';
@@ -17,6 +15,13 @@ type AsyncState = {
 type State = {
   async: AsyncState;
   isLoggedIn: boolean;
+  profile: {
+    cityName: string;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    username: string;
+  } | null;
 };
 
 type LoginBody = {
@@ -40,25 +45,29 @@ type RegistrationSuccess = {
   success: boolean;
 };
 
-export const loggedIn = createAsyncThunk(`${SLICE_NAME}/loggedIn`, (body: LoginBody) =>
-  fetch<LoginSuccess>('/user/login', {
-    body: JSON.stringify(body),
-    method: 'POST',
-  }).then((data) => {
-    history.push('/');
-    localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_KEY, data.token);
-    return data;
-  }),
+export const loggedIn = createAsyncThunk(
+  `${SLICE_NAME}/loggedIn`,
+  ({ body, onSuccess }: { body: LoginBody; onSuccess: () => void }) =>
+    fetch<LoginSuccess>('/user/login', {
+      body: JSON.stringify(body),
+      method: 'POST',
+    }).then((data) => {
+      onSuccess();
+      localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_KEY, data.token);
+      return data;
+    }),
 );
 
-export const registered = createAsyncThunk(`${SLICE_NAME}/registered`, (body: RegistrationBody) =>
-  fetch<RegistrationSuccess>('/user', {
-    body: JSON.stringify(body),
-    method: 'POST',
-  }).then((data) => {
-    history.push('/');
-    return data;
-  }),
+export const registered = createAsyncThunk(
+  `${SLICE_NAME}/registered`,
+  ({ body, onSuccess }: { body: RegistrationBody; onSuccess: () => void }) =>
+    fetch<RegistrationSuccess>('/user', {
+      body: JSON.stringify(body),
+      method: 'POST',
+    }).then((data) => {
+      onSuccess();
+      return data;
+    }),
 );
 
 export const slice = createSlice({
@@ -69,12 +78,14 @@ export const slice = createSlice({
       loading: 'idle',
     },
     isLoggedIn: false,
+    profile: null,
   } as State,
   reducers: {
     authTokenChecked: (state, action: PayloadAction<{ authTokenExists: boolean }>): void => {
       state.isLoggedIn = action.payload.authTokenExists;
     },
     loggedOut: (state): void => {
+      state.profile = null;
       state.isLoggedIn = false;
     },
   },
@@ -88,6 +99,14 @@ export const slice = createSlice({
       if (state.async.loading === 'pending') {
         state.async.loading = 'idle';
         state.isLoggedIn = true;
+        // TODO: Receive profile data from BE
+        state.profile = {
+          cityName: 'Richmond',
+          email: 'foo@bar.com',
+          username: 'foo_bar_123',
+          firstName: 'Timothy',
+          lastName: 'Doe',
+        };
       }
     },
     [loggedIn.rejected.type]: (state, action: { error: Error }): void => {
@@ -105,6 +124,14 @@ export const slice = createSlice({
       if (state.async.loading === 'pending') {
         state.async.loading = 'idle';
         state.isLoggedIn = true;
+        // TODO: Receive profile data from BE
+        state.profile = {
+          cityName: 'Richmond',
+          email: 'foo@bar.com',
+          username: 'foo_bar_123',
+          firstName: 'Timothy',
+          lastName: 'Doe',
+        };
       }
     },
     [registered.rejected.type]: (state, action: { error: Error }): void => {
@@ -128,6 +155,12 @@ export const selectIsLoggedIn = (state: RootState): State['isLoggedIn'] =>
   createSelector(
     (state: RootState) => state.user.isLoggedIn,
     (isLoggedIn) => isLoggedIn,
+  )(state);
+
+export const selectProfile = (state: RootState): State['profile'] =>
+  createSelector(
+    (state: RootState) => state.user.profile,
+    (profile) => profile,
   )(state);
 
 export const userReducer = slice.reducer;

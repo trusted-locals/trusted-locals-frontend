@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { RouteComponentProps, Link as RouterLink, withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, Input, Link } from '@chakra-ui/core';
 
@@ -11,8 +11,6 @@ import { responsiveBoxProps } from '../../app/styles';
 
 import { AppRoutes } from '../../app/router';
 
-const RESET_PASSWORD_PATH: AppRoutes = '/account/reset-password';
-
 const MIN_LENGTH_USERNAME = 3;
 const MAX_LENGTH_USERNAME = 64;
 
@@ -20,7 +18,9 @@ const containerStyles = {
   marginTop: 4,
 };
 
-export const Login: FC = () => {
+type Props = {} & RouteComponentProps;
+
+const PureLogin: FC<Props> = ({ history }: Props) => {
   const dispatch = useDispatch();
   const { error, loading } = useSelector(selectAsync);
 
@@ -39,8 +39,10 @@ export const Login: FC = () => {
 
             dispatch(
               loggedIn({
-                name,
-                password,
+                body: { name, password },
+                onSuccess: () => {
+                  history.push('/feed' as AppRoutes);
+                },
               }),
             );
           }}
@@ -72,7 +74,7 @@ export const Login: FC = () => {
               Login
             </Button>
             <Link alignItems='center' as='span' display='flex'>
-              <RouterLink to={RESET_PASSWORD_PATH}>
+              <RouterLink to={'/account/reset-password' as AppRoutes}>
                 <Button variant='link' size='sm'>
                   Forgot password?
                 </Button>
@@ -87,6 +89,16 @@ export const Login: FC = () => {
           </Alert>
         )}
       </Box>
+      <Box marginTop={12}>
+        Don't have an account yet?{' '}
+        <RouterLink to={'/account/register' as AppRoutes}>
+          <Link as='span' color='blue.500' fontWeight='semibold'>
+            Create one here.
+          </Link>
+        </RouterLink>
+      </Box>
     </Box>
   );
 };
+
+export const Login = withRouter(PureLogin);

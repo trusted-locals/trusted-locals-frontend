@@ -1,12 +1,15 @@
 import React, { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, Input } from '@chakra-ui/core';
+import { RouteComponentProps, Link as RouterLink, withRouter } from 'react-router-dom';
+import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, Input, Link } from '@chakra-ui/core';
 
 import { registered, selectAsync } from './userSlice';
 
 import { PasswordInput } from '../../components/PasswordInput';
 
 import { responsiveBoxProps } from '../../app/styles';
+
+import { AppRoutes } from '../../app/router';
 
 const MIN_LENGTH_USERNAME = 3;
 const MAX_LENGTH_USERNAME = 16;
@@ -15,7 +18,9 @@ const containerStyles = {
   marginTop: 4,
 };
 
-export const Registration: FC = () => {
+type Props = {} & RouteComponentProps;
+
+const PureRegistration: FC<Props> = ({ history }: Props) => {
   const dispatch = useDispatch();
   const { error, loading } = useSelector(selectAsync);
 
@@ -35,11 +40,16 @@ export const Registration: FC = () => {
 
             dispatch(
               registered({
-                // TODO: Country/City in registration flow
-                country: 'test-country',
-                email,
-                name,
-                password,
+                body: {
+                  // TODO: Country/City in registration flow
+                  country: 'test-country',
+                  email,
+                  name,
+                  password,
+                },
+                onSuccess: () => {
+                  history.push('/feed' as AppRoutes);
+                },
               }),
             );
           }}
@@ -90,6 +100,16 @@ export const Registration: FC = () => {
           </Alert>
         )}
       </Box>
+      <Box marginTop={12}>
+        Already have an account?{' '}
+        <RouterLink to={'/account/login' as AppRoutes}>
+          <Link as='span' color='blue.500' fontWeight='semibold'>
+            Login here.
+          </Link>
+        </RouterLink>
+      </Box>
     </Box>
   );
 };
+
+export const Registration = withRouter(PureRegistration);
