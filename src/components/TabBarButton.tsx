@@ -2,9 +2,11 @@ import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, IconButton, IconButtonProps, Text } from '@chakra-ui/core';
 
+import { ThemeType } from '../app/styles';
+
 type Props = {
   ariaLabel: IconButtonProps['aria-label'];
-  icon: IconButtonProps['icon'];
+  icon: keyof ThemeType['icons'];
   isActive: boolean;
   name: string;
   to: string;
@@ -16,6 +18,7 @@ export const TabBarButton: FC<Props> = ({ ariaLabel, icon, isActive, name, to }:
       <IconButton
         aria-label={ariaLabel}
         as='span'
+        // @ts-ignore
         icon={icon}
         isActive={isActive}
         size='md'

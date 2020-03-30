@@ -1,7 +1,7 @@
 import React, { FC, lazy } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, Switch, useLocation } from 'react-router-dom';
-import { Box, IconButtonProps } from '@chakra-ui/core';
+import { Box } from '@chakra-ui/core';
 
 import { AppRoute } from '../app/AppRoute';
 import { FeedPage } from '../features/feed/FeedPage';
@@ -10,6 +10,7 @@ import { TabBarButton } from './TabBarButton';
 import { selectIsLoggedIn } from '../features/user/userSlice';
 
 import { AppRoutes } from '../app/router';
+import { ThemeType } from '../app/styles';
 
 const FEED_PATH: AppRoutes = '/feed';
 
@@ -58,15 +59,15 @@ const Page404 = lazy(() =>
 const buttons: {
   [key: string]: {
     ariaLabel: string;
-    icon: IconButtonProps['icon'];
+    icon: keyof ThemeType['icons'];
     name: string;
     to: AppRoutes;
   };
 } = {
-  home: { ariaLabel: 'home button', icon: 'view', name: 'Home', to: '/feed' },
-  submit: { ariaLabel: 'submit button', icon: 'plus-square', name: 'Submit', to: '/submit' },
-  profile: { ariaLabel: 'profile button', icon: 'settings', name: 'Profile', to: '/profile' },
-  account: { ariaLabel: 'account button', icon: 'settings', name: 'Account', to: '/account' },
+  home: { ariaLabel: 'home button', icon: 'mdHome', name: 'Home', to: '/feed' },
+  submit: { ariaLabel: 'submit button', icon: 'mdAdd', name: 'Submit', to: '/submit' },
+  profile: { ariaLabel: 'profile button', icon: 'mdPerson', name: 'Profile', to: '/profile' },
+  account: { ariaLabel: 'account button', icon: 'mdPerson', name: 'Account', to: '/account' },
 };
 
 const loggedInButtons = {
@@ -159,6 +160,8 @@ export const TabBar: FC<{}> = () => {
         <Box borderTop='1px solid' borderColor='gray.300' bottom='0' display='flex' position='fixed' width='100%'>
           {buttons.map((buttonProps) => (
             <Box flex='1 1 0' key={buttonProps.name}>
+              {/*
+              // @ts-ignore */}
               <TabBarButton {...buttonProps} isActive={location.pathname.startsWith(buttonProps.to)} />
             </Box>
           ))}

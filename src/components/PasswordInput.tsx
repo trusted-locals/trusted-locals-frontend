@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { BoxProps, Button, FormControl, FormLabel, Input, InputGroup, InputRightElement } from '@chakra-ui/core';
+import { BoxProps, FormControl, FormLabel, IconButton, Input, InputGroup, InputRightElement } from '@chakra-ui/core';
 
 const MIN_LENGTH_PASSWORD = 8;
 const MAX_LENGTH_PASSWORD = 64;
@@ -35,17 +35,18 @@ export const PasswordInput: FC<Props> = ({
         type={isPasswordVisible ? 'text' : 'password'}
       />
       <InputRightElement width='4.5rem'>
-        <Button
-          aria-label='toggle password visibility'
+        <IconButton
+          aria-label={isPasswordVisible ? 'hide password' : 'show password'}
           height='65%'
+          // @ts-ignore
+          icon={isPasswordVisible ? 'ioMdEyeOff' : 'ioMdEye'}
           onClick={(): void => {
             setIsPasswordVisible(!isPasswordVisible);
           }}
+          title={isPasswordVisible ? 'Hide password' : 'Show password'}
           variant='outline'
           size='sm'
-        >
-          {isPasswordVisible ? 'Hide' : 'Show'}
-        </Button>
+        />
       </InputRightElement>
     </InputGroup>
   </FormControl>
