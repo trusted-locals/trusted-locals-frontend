@@ -90,7 +90,7 @@ const PureLogin: FC<Props> = ({ history }: Props) => {
         )}
       </Box>
       <Box marginTop={12}>
-        Don't have an account yet?{' '}
+        Don&apos;t have an account yet?{' '}
         <RouterLink to={'/account/register' as AppRoutes}>
           <Link as='span' color='blue.500' fontWeight='semibold'>
             Create one here.

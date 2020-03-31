@@ -2,6 +2,7 @@ import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+import { submitReducer } from '../features/submit/submitSlice';
 import { userReducer } from '../features/user/userSlice';
 
 export type AppDispatch = typeof store.dispatch;
@@ -11,7 +12,7 @@ export type RootState = ReturnType<typeof rootReducer>;
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['user'],
+  blacklist: ['submit', 'user'],
 };
 
 const userPersistConfig = {
@@ -21,6 +22,7 @@ const userPersistConfig = {
 };
 
 const rootReducer = combineReducers({
+  submit: submitReducer,
   user: persistReducer(userPersistConfig, userReducer),
 });
 
