@@ -19,6 +19,7 @@ type State = {
 type SubmitBody = {
   image: string | null;
   text: string;
+  title: string;
 };
 
 type SubmitSuccess = {

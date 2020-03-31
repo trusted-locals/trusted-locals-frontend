@@ -18,20 +18,26 @@ import { selectAsync, submitted } from './submitSlice';
 import { responsiveBoxProps } from '../../app/styles';
 
 // TODO: Talk with BE.
-const TEXTAREA_MIN_LENGTH = 4;
-const TEXTAREA_MAX_LENGTH = 65536;
+const TITLE_MIN_LENGTH = 4;
+const TITLE_MAX_LENGTH = 32;
+
+// TODO: Talk with BE.
+const TEXT_MIN_LENGTH = 4;
+const TEXT_MAX_LENGTH = 65536;
 
 const TEXTAREA_PLACEHOLDER = 'Share something with your local community';
 
+const ARIA_TITLE = 'post-title';
+const ARIA_TEXT = 'post-text';
 const ARIA_IMAGE = 'post-image';
 const ARIA_IMAGE_HELPER_TEXT = 'post-image-helper-text';
-const ARIA_TEXTAREA = 'post-text';
 
 export const Submit: FC<{}> = () => {
   const dispatch = useDispatch();
 
   const { error, loading } = useSelector(selectAsync);
 
+  const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const imageInput = useRef(null);
 
@@ -47,22 +53,39 @@ export const Submit: FC<{}> = () => {
               // TODO: Handle image content
               image: 'todo...',
               text,
+              title,
             }),
           );
         }}
       >
         <FormControl marginTop={8}>
-          <FormLabel htmlFor={ARIA_TEXTAREA}>Text</FormLabel>
-          <Textarea
-            id={ARIA_TEXTAREA}
+          <FormLabel htmlFor={ARIA_TITLE}>Title</FormLabel>
+          <Input
+            id={ARIA_TITLE}
             isRequired
             marginTop={2}
-            maxLength={TEXTAREA_MAX_LENGTH}
-            minLength={TEXTAREA_MIN_LENGTH}
+            maxLength={TITLE_MAX_LENGTH}
+            minLength={TITLE_MIN_LENGTH}
+            onChange={(e: FormEvent<HTMLInputElement>): void => {
+              setTitle((e.target as HTMLInputElement).value);
+            }}
+            type='text'
+            value={title}
+          />
+        </FormControl>
+        <FormControl marginTop={8}>
+          <FormLabel htmlFor={ARIA_TEXT}>Text</FormLabel>
+          <Textarea
+            id={ARIA_TEXT}
+            isRequired
+            marginTop={2}
+            maxLength={TEXT_MAX_LENGTH}
+            minLength={TEXT_MIN_LENGTH}
             onChange={(e: FormEvent<HTMLInputElement>): void => {
               setText((e.target as HTMLInputElement).value);
             }}
             placeholder={TEXTAREA_PLACEHOLDER}
+            value={text}
           />
         </FormControl>
         <FormControl marginTop={8}>
