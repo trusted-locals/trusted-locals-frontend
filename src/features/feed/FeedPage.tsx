@@ -1,11 +1,14 @@
 import React, { FC } from 'react';
 import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
-import { Box, Tab, TabList, TabPanels, Tabs } from '@chakra-ui/core';
+import { Tab, TabList, TabPanels, Tabs } from '@chakra-ui/core';
+import { useWindowWidth } from '@react-hook/window-size';
 
 import { Feed } from './Feed';
 import { FeedHeader } from './FeedHeader';
 
 import { Category } from './feedSlice';
+
+import { convertWidthToEM } from '../../utils/dom-utils';
 
 const ARIA_TABS = 'tabs';
 const ARIA_NEWS_TAB = 'tabs-news-tab';
@@ -30,37 +33,21 @@ const tabs: {
   { category: 'advice', id: ARIA_ADVICE_TAB, name: 'Advice', to: ADVICE_PATH },
 ];
 
-const tabsProps = {
-  marginTop: 6,
-};
-
-type TabsWrapperProps = {
-  children: React.ReactNode;
-};
-
-// Workaround for showing smaller text on mobile.
-const TabsWrapper: FC<TabsWrapperProps> = ({ children }: TabsWrapperProps) => (
-  <>
-    <Box display={['block', 'none']}>
-      <Tabs {...tabsProps} size='sm'>
-        {children}
-      </Tabs>
-    </Box>
-    <Box display={['none', 'block']}>
-      <Tabs {...tabsProps} size='md'>
-        {children}
-      </Tabs>
-    </Box>
-  </>
-);
+// Taken from theme.breakpoints
+const TABS_SIZE_BREAKPOINT_EM = 30;
 
 export const FeedPage: FC = () => {
   const { pathname } = useLocation();
 
+  // Workaround for showing smaller text on mobile.
+  const widthPX = useWindowWidth(0, { leading: true, wait: 250 });
+  const widthEM = convertWidthToEM(widthPX);
+  const tabsSize = widthEM <= TABS_SIZE_BREAKPOINT_EM ? 'sm' : 'md';
+
   return (
     <>
       <FeedHeader />
-      <TabsWrapper>
+      <Tabs marginTop={6} size={tabsSize}>
         <TabList id={ARIA_TABS}>
           {tabs.map(({ id, name, to }) => (
             <Tab
@@ -87,7 +74,7 @@ export const FeedPage: FC = () => {
             <Redirect from='/' to={NEWS_PATH} />
           </Switch>
         </TabPanels>
-      </TabsWrapper>
+      </Tabs>
     </>
   );
 };

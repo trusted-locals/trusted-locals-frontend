@@ -30,7 +30,7 @@ type State = {
   categories: Categories;
 };
 
-export const loadRequested = createAsyncThunk(`${SLICE_NAME}/loadRequested`, (category: Category) =>
+export const loadRequested = createAsyncThunk(`${SLICE_NAME}/loadRequested`, (_category: Category) =>
   Promise.resolve([
     {
       a: true,
@@ -57,7 +57,7 @@ export const slice = createSlice({
   } as State,
   reducers: {},
   extraReducers: {
-    [loadRequested.pending.type]: (state, action: any): void => {
+    [loadRequested.pending.type]: (state, action): void => {
       // @ts-ignore
       const category: Category = action.meta.arg;
 

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RouteComponentProps, Link as RouterLink, withRouter } from 'react-router-dom';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, Input, Link } from '@chakra-ui/core';
 
 import { registered, selectAsync } from './userSlice';
@@ -18,9 +18,7 @@ const containerStyles = {
   marginTop: 4,
 };
 
-type Props = {} & RouteComponentProps;
-
-const PureRegistration: FC<Props> = ({ history }: Props) => {
+const PureRegistration: FC<{}> = () => {
   const dispatch = useDispatch();
   const { error, loading } = useSelector(selectAsync);
 
