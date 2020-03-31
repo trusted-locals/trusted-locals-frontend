@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { RouteComponentProps, Link as RouterLink, withRouter } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, Input, Link } from '@chakra-ui/core';
 
@@ -18,9 +18,7 @@ const containerStyles = {
   marginTop: 4,
 };
 
-type Props = {} & RouteComponentProps;
-
-const PureLogin: FC<Props> = ({ history }: Props) => {
+export const Login: FC<{}> = () => {
   const dispatch = useDispatch();
   const { error, loading } = useSelector(selectAsync);
 
@@ -40,9 +38,6 @@ const PureLogin: FC<Props> = ({ history }: Props) => {
             dispatch(
               loggedIn({
                 body: { name, password },
-                onSuccess: () => {
-                  history.push('/feed' as AppRoutes);
-                },
               }),
             );
           }}
@@ -100,5 +95,3 @@ const PureLogin: FC<Props> = ({ history }: Props) => {
     </Box>
   );
 };
-
-export const Login = withRouter(PureLogin);

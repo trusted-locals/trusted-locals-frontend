@@ -2,6 +2,7 @@ import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@r
 
 import { fetch } from '../../utils/fetch';
 
+import { AppRoutes, history } from '../../app/router';
 import { RootState } from '../../app/store';
 
 const SLICE_NAME = 'submit';
@@ -24,16 +25,14 @@ type SubmitSuccess = {
   success: boolean;
 };
 
-export const submitted = createAsyncThunk(
-  `${SLICE_NAME}/submitted`,
-  ({ body, onSuccess }: { body: SubmitBody; onSuccess: () => void }) =>
-    fetch<SubmitSuccess>('/TODO:Route', {
-      body: JSON.stringify(body),
-      method: 'POST',
-    }).then((data) => {
-      onSuccess();
-      return data;
-    }),
+export const submitted = createAsyncThunk(`${SLICE_NAME}/submitted`, (body: SubmitBody) =>
+  fetch<SubmitSuccess>('/TODO:Route', {
+    body: JSON.stringify(body),
+    method: 'POST',
+  }).then((data) => {
+    history.push('/feed' as AppRoutes);
+    return data;
+  }),
 );
 
 export const slice = createSlice({

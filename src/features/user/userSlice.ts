@@ -2,6 +2,7 @@ import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@r
 
 import { fetch } from '../../utils/fetch';
 
+import { AppRoutes, history } from '../../app/router';
 import { RootState } from '../../app/store';
 
 const SLICE_NAME = 'user';
@@ -20,6 +21,8 @@ type State = {
     email: string;
     firstName?: string;
     lastName?: string;
+    postsCount: number;
+    rating: number;
     username: string;
   } | null;
 };
@@ -43,31 +46,39 @@ type RegistrationBody = {
 
 type RegistrationSuccess = {
   success: boolean;
+  token: string;
 };
 
-export const loggedIn = createAsyncThunk(
-  `${SLICE_NAME}/loggedIn`,
-  ({ body, onSuccess }: { body: LoginBody; onSuccess: () => void }) =>
-    fetch<LoginSuccess>('/user/login', {
-      body: JSON.stringify(body),
-      method: 'POST',
-    }).then((data) => {
-      onSuccess();
-      localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_KEY, data.token);
-      return data;
-    }),
+const MOCKED_PROFILE = {
+  cityName: 'Richmond',
+  email: 'foo@bar.com',
+  firstName: 'Timothy',
+  lastName: 'Doe',
+  postsCount: 7,
+  rating: 79,
+  username: 'foo_bar_123',
+};
+
+export const loggedIn = createAsyncThunk(`${SLICE_NAME}/loggedIn`, ({ body }: { body: LoginBody }) =>
+  fetch<LoginSuccess>('/user/login', {
+    body: JSON.stringify(body),
+    method: 'POST',
+  }).then((data) => {
+    history.push('/feed' as AppRoutes);
+    localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_KEY, data.token);
+    return data;
+  }),
 );
 
-export const registered = createAsyncThunk(
-  `${SLICE_NAME}/registered`,
-  ({ body, onSuccess }: { body: RegistrationBody; onSuccess: () => void }) =>
-    fetch<RegistrationSuccess>('/user', {
-      body: JSON.stringify(body),
-      method: 'POST',
-    }).then((data) => {
-      onSuccess();
-      return data;
-    }),
+export const registered = createAsyncThunk(`${SLICE_NAME}/registered`, (body: RegistrationBody) =>
+  fetch<RegistrationSuccess>('/user', {
+    body: JSON.stringify(body),
+    method: 'POST',
+  }).then((data) => {
+    history.push('/feed' as AppRoutes);
+    localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_KEY, data.token);
+    return data;
+  }),
 );
 
 export const slice = createSlice({
@@ -100,13 +111,7 @@ export const slice = createSlice({
         state.async.loading = 'idle';
         state.isLoggedIn = true;
         // TODO: Receive profile data from BE
-        state.profile = {
-          cityName: 'Richmond',
-          email: 'foo@bar.com',
-          username: 'foo_bar_123',
-          firstName: 'Timothy',
-          lastName: 'Doe',
-        };
+        state.profile = MOCKED_PROFILE;
       }
     },
     [loggedIn.rejected.type]: (state, action: { error: Error }): void => {
@@ -125,13 +130,7 @@ export const slice = createSlice({
         state.async.loading = 'idle';
         state.isLoggedIn = true;
         // TODO: Receive profile data from BE
-        state.profile = {
-          cityName: 'Richmond',
-          email: 'foo@bar.com',
-          username: 'foo_bar_123',
-          firstName: 'Timothy',
-          lastName: 'Doe',
-        };
+        state.profile = MOCKED_PROFILE;
       }
     },
     [registered.rejected.type]: (state, action: { error: Error }): void => {

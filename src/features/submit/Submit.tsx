@@ -1,6 +1,5 @@
 import React, { FC, FormEvent, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import {
   Alert,
   AlertIcon,
@@ -18,8 +17,6 @@ import { selectAsync, submitted } from './submitSlice';
 
 import { responsiveBoxProps } from '../../app/styles';
 
-import { AppRoutes } from '../../app/router';
-
 // TODO: Talk with BE.
 const TEXTAREA_MIN_LENGTH = 4;
 const TEXTAREA_MAX_LENGTH = 65536;
@@ -30,9 +27,7 @@ const ARIA_IMAGE = 'post-image';
 const ARIA_IMAGE_HELPER_TEXT = 'post-image-helper-text';
 const ARIA_TEXTAREA = 'post-text';
 
-type Props = {} & RouteComponentProps;
-
-const PureSubmit: FC<Props> = ({ history }: Props) => {
+export const Submit: FC<{}> = () => {
   const dispatch = useDispatch();
 
   const { error, loading } = useSelector(selectAsync);
@@ -49,14 +44,9 @@ const PureSubmit: FC<Props> = ({ history }: Props) => {
 
           dispatch(
             submitted({
-              body: {
-                // TODO: Handle image content
-                image: 'todo...',
-                text,
-              },
-              onSuccess: () => {
-                history.push('/feed' as AppRoutes);
-              },
+              // TODO: Handle image content
+              image: 'todo...',
+              text,
             }),
           );
         }}
@@ -93,5 +83,3 @@ const PureSubmit: FC<Props> = ({ history }: Props) => {
     </Box>
   );
 };
-
-export const Submit = withRouter(PureSubmit);

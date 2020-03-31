@@ -40,16 +40,11 @@ const PureRegistration: FC<Props> = ({ history }: Props) => {
 
             dispatch(
               registered({
-                body: {
-                  // TODO: Country/City in registration flow
-                  country: 'test-country',
-                  email,
-                  name,
-                  password,
-                },
-                onSuccess: () => {
-                  history.push('/feed' as AppRoutes);
-                },
+                // TODO: Country/City in registration flow
+                country: 'test-country',
+                email,
+                name,
+                password,
               }),
             );
           }}
