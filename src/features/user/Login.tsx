@@ -35,11 +35,7 @@ export const Login: FC<{}> = () => {
           onSubmit={(e): void => {
             e.preventDefault();
 
-            dispatch(
-              loggedIn({
-                body: { name, password },
-              }),
-            );
+            dispatch(loggedIn({ name, password }));
           }}
         >
           <FormControl {...containerStyles}>

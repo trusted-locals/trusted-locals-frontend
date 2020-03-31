@@ -5,6 +5,8 @@ import { Box, Tab, TabList, TabPanels, Tabs } from '@chakra-ui/core';
 import { Feed } from './Feed';
 import { FeedHeader } from './FeedHeader';
 
+import { Category } from './feedSlice';
+
 const ARIA_TABS = 'tabs';
 const ARIA_NEWS_TAB = 'tabs-news-tab';
 const ARIA_MEDICAL_SUPPLY_TAB = 'tabs-medical-supply-tab';
@@ -17,14 +19,15 @@ const GROCERY_PATH = '/feed/grocery';
 const ADVICE_PATH = '/feed/advice';
 
 const tabs: {
+  category: Category;
   id: string;
   name: string;
   to: string;
 }[] = [
-  { id: ARIA_NEWS_TAB, name: 'News', to: NEWS_PATH },
-  { id: ARIA_MEDICAL_SUPPLY_TAB, name: 'Medical Supply', to: MEDICAL_SUPPLY_PATH },
-  { id: ARIA_GROCERY_TAB, name: 'Grocery', to: GROCERY_PATH },
-  { id: ARIA_ADVICE_TAB, name: 'Advice', to: ADVICE_PATH },
+  { category: 'news', id: ARIA_NEWS_TAB, name: 'News', to: NEWS_PATH },
+  { category: 'medical_supply', id: ARIA_MEDICAL_SUPPLY_TAB, name: 'Medical Supply', to: MEDICAL_SUPPLY_PATH },
+  { category: 'grocery', id: ARIA_GROCERY_TAB, name: 'Grocery', to: GROCERY_PATH },
+  { category: 'advice', id: ARIA_ADVICE_TAB, name: 'Advice', to: ADVICE_PATH },
 ];
 
 const tabsProps = {
@@ -76,9 +79,9 @@ export const FeedPage: FC = () => {
 
         <TabPanels marginTop={8}>
           <Switch>
-            {tabs.map(({ name, to }) => (
-              <Route exact key={name} path={to}>
-                <Feed type={name} />
+            {tabs.map(({ category, to }) => (
+              <Route exact key={category} path={to}>
+                <Feed category={category} />
               </Route>
             ))}
             <Redirect from='/' to={NEWS_PATH} />

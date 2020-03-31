@@ -59,7 +59,7 @@ const MOCKED_PROFILE = {
   username: 'foo_bar_123',
 };
 
-export const loggedIn = createAsyncThunk(`${SLICE_NAME}/loggedIn`, ({ body }: { body: LoginBody }) =>
+export const loggedIn = createAsyncThunk(`${SLICE_NAME}/loggedIn`, (body: LoginBody) =>
   fetch<LoginSuccess>('/user/login', {
     body: JSON.stringify(body),
     method: 'POST',

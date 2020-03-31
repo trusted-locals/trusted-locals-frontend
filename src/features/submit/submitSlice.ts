@@ -67,7 +67,7 @@ export const slice = createSlice({
 
 export const selectAsync = (state: RootState): State['async'] =>
   createSelector(
-    (state: RootState) => state.user.async,
+    (state: RootState) => state.submit.async,
     (async) => async,
   )(state);
 
