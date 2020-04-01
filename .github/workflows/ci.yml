@@ -27,7 +27,7 @@ jobs:
         uses: foo-software/lighthouse-check-action@master
         id: lighthouseCheck
         with:
-          urls: 'https://trusted-locals.github.io/,https://trusted-locals.github.io/#/login,https://trusted-locals.github.io/#/register'
+          urls: 'https://trusted-locals.github.io/#/feed/news,https://trusted-locals.github.io/#/submit,https://trusted-locals.github.io/#/account,https://trusted-locals.github.io/#/account/login,https://trusted-locals.github.io/#/account/register,https://trusted-locals.github.io/#/account/reset-password'
       - name: Handle Lighthouse Check results
         uses: foo-software/lighthouse-check-status-action@master
         with:
