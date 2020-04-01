@@ -8,27 +8,22 @@ import {
   loggedOut,
   selectOtherProfile,
   selectOwnProfile,
-  Profile as ProfileType,
-  OtherProfile,
+  selectOwnUsername,
 } from './userSlice';
 
 import { responsiveBoxProps } from '../../app/styles';
 
-import { RootState } from '../../app/store';
-
 export const Profile: FC<{}> = () => {
-  const history = useHistory();
-
-  const userNameParam: string | undefined = history.location.pathname.split('/profile/')[1];
-  const isOwnProfile = userNameParam === 'me' || userNameParam === undefined || userNameParam === '';
-  const username = isOwnProfile ? 'me' : userNameParam;
-
-  const selector: (state: RootState) => (ProfileType | null) | (OtherProfile | undefined) = isOwnProfile
-    ? selectOwnProfile
-    : selectOtherProfile(username);
-
   const dispatch = useDispatch();
-  const profile = useSelector(selector);
+
+  const ownUsername: string | null = useSelector(selectOwnUsername);
+
+  const history = useHistory();
+  const userNameParam: string | undefined = history.location.pathname.split('/profile/')[1];
+  const isOwnProfile = ownUsername === userNameParam || userNameParam === 'me';
+
+  const profileSelector = isOwnProfile ? selectOwnProfile : selectOtherProfile;
+  const profile = useSelector(profileSelector);
 
   if (!profile) {
     // TODO: Fetch profile.
@@ -64,6 +59,7 @@ export const Profile: FC<{}> = () => {
         </Box>
       </Box>
       <Divider borderColor='gray.400' />
+      {/* TODO: Posts of user. If no posts, show text. */}
       {isOwnProfile && (
         <Box marginTop={8}>
           <Button

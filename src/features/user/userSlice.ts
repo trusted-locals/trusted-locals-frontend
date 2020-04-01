@@ -36,7 +36,7 @@ type State = {
   async: AsyncState;
   isLoggedIn: boolean;
   profile: Profile | null;
-  otherProfiles: { [key: string]: OtherProfile };
+  otherProfile: OtherProfile | null;
 };
 
 type LoginBody = {
@@ -102,7 +102,7 @@ export const slice = createSlice({
     },
     isLoggedIn: false,
     profile: null,
-    otherProfiles: {},
+    otherProfile: null,
   } as State,
   reducers: {
     authTokenChecked: (state, action: PayloadAction<{ authTokenExists: boolean }>): void => {
@@ -169,9 +169,9 @@ export const selectIsLoggedIn = (state: RootState): State['isLoggedIn'] =>
     (isLoggedIn) => isLoggedIn,
   )(state);
 
-export const selectOtherProfile = (username: string) => (state: RootState): OtherProfile | undefined =>
+export const selectOtherProfile = (state: RootState): OtherProfile | null =>
   createSelector(
-    (state: RootState) => state.user.otherProfiles[username],
+    (state: RootState) => state.user.otherProfile,
     (otherProfile) => otherProfile,
   )(state);
 
@@ -179,6 +179,12 @@ export const selectOwnProfile = (state: RootState): Profile | null =>
   createSelector(
     (state: RootState) => state.user.profile,
     (profile) => profile,
+  )(state);
+
+export const selectOwnUsername = (state: RootState): string | null =>
+  createSelector(
+    (state: RootState) => state.user.profile?.username ?? null,
+    (username) => username,
   )(state);
 
 export const userReducer = slice.reducer;
