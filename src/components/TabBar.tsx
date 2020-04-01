@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Redirect, Switch, useLocation } from 'react-router-dom';
 import { Box } from '@chakra-ui/core';
 
-import { AppRoute } from '../app/AppRoute';
+import { AppRoute, UserState } from '../app/AppRoute';
 import { FeedPage } from '../features/feed/FeedPage';
 import { TabBarButton } from './TabBarButton';
 
@@ -105,7 +105,7 @@ export const TabBar: FC<{}> = () => {
           path='/profile'
           redirect={{
             path: '/account',
-            when: 'logged-out',
+            when: UserState.LoggedOut,
           }}
         >
           <Profile />
@@ -115,7 +115,7 @@ export const TabBar: FC<{}> = () => {
           path='/account/reset-password'
           redirect={{
             path: '/profile',
-            when: 'logged-in',
+            when: UserState.LoggedIn,
           }}
         >
           <ResetPassword />
@@ -125,7 +125,7 @@ export const TabBar: FC<{}> = () => {
           path='/account/login'
           redirect={{
             path: '/profile',
-            when: 'logged-in',
+            when: UserState.LoggedIn,
           }}
         >
           <Login />
@@ -135,7 +135,7 @@ export const TabBar: FC<{}> = () => {
           path='/account/register'
           redirect={{
             path: '/profile',
-            when: 'logged-in',
+            when: UserState.LoggedIn,
           }}
         >
           <Registration />
@@ -145,7 +145,7 @@ export const TabBar: FC<{}> = () => {
           path='/account'
           redirect={{
             path: '/profile',
-            when: 'logged-in',
+            when: UserState.LoggedIn,
           }}
         >
           <Account />
@@ -169,8 +169,6 @@ export const TabBar: FC<{}> = () => {
         >
           {buttons.map((buttonProps) => (
             <Box flex='1 1 0' key={buttonProps.name}>
-              {/*
-              // @ts-ignore */}
               <TabBarButton {...buttonProps} isActive={location.pathname.startsWith(buttonProps.to)} />
             </Box>
           ))}

@@ -8,20 +8,25 @@ import { selectIsLoggedIn } from '../features/user/userSlice';
 
 import { AppRoutes } from './router';
 
+export const enum UserState {
+  LoggedIn,
+  LoggedOut,
+}
+
 type Props = {
   children: ReactElement;
   lazyload: boolean;
   path: AppRoutes | null;
   redirect?: {
     path: AppRoutes;
-    when: 'logged-in' | 'logged-out';
+    when: UserState;
   };
 };
 
 export const AppRoute: FC<Props> = ({ children, lazyload, path, redirect }: Props) => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const shouldRedirect =
-    (redirect?.when === 'logged-in' && isLoggedIn) || (redirect?.when === 'logged-out' && !isLoggedIn);
+    (redirect?.when === UserState.LoggedIn && isLoggedIn) || (redirect?.when === UserState.LoggedOut && !isLoggedIn);
   if (shouldRedirect) {
     return <Redirect to={{ pathname: redirect?.path }} />;
   }
