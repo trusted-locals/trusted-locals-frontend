@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Button, Icon, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/core';
 
-import { selectProfile } from '../user/userSlice';
+import { selectOwnProfile } from '../user/userSlice';
 
 import { AppRoutes } from '../../app/router';
 import { responsiveBoxProps } from '../../app/styles';
@@ -13,7 +13,7 @@ type Props = {};
 const INPUT_PLACEHOLDER = 'Use keywords to search for information';
 
 const Location: FC<{}> = () => {
-  const profile = useSelector(selectProfile);
+  const profile = useSelector(selectOwnProfile);
 
   if (profile === null) {
     return null;
@@ -27,9 +27,9 @@ const Location: FC<{}> = () => {
 };
 
 export const FeedHeader: FC<Props> = (_props: Props) => {
-  const profile = useSelector(selectProfile);
+  const profile = useSelector(selectOwnProfile);
 
-  if (profile === null) {
+  if (!profile) {
     return (
       <Box {...responsiveBoxProps}>
         <p>Sign in to vote and contribute.</p>

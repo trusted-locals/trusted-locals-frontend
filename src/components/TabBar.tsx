@@ -12,8 +12,6 @@ import { selectIsLoggedIn } from '../features/user/userSlice';
 import { AppRoutes } from '../app/router';
 import { ThemeType } from '../app/styles';
 
-const FEED_PATH: AppRoutes = '/feed';
-
 const Submit = lazy(() =>
   import('../features/submit/Submit').then(({ Submit }) => ({
     default: Submit,
@@ -66,7 +64,7 @@ const buttons: {
 } = {
   home: { ariaLabel: 'home button', icon: 'mdHome', name: 'Home', to: '/feed' },
   submit: { ariaLabel: 'submit button', icon: 'mdAdd', name: 'Submit', to: '/submit' },
-  profile: { ariaLabel: 'profile button', icon: 'mdPerson', name: 'Profile', to: '/profile' },
+  profile: { ariaLabel: 'profile button', icon: 'mdPerson', name: 'Profile', to: '/profile/me' },
   account: { ariaLabel: 'account button', icon: 'mdPerson', name: 'Account', to: '/account' },
 };
 
@@ -102,7 +100,7 @@ export const TabBar: FC<{}> = () => {
         </AppRoute>
         <AppRoute
           lazyload
-          path='/profile'
+          path='/profile/me'
           redirect={{
             path: '/account',
             when: UserState.LoggedOut,
@@ -114,7 +112,7 @@ export const TabBar: FC<{}> = () => {
           lazyload
           path='/account/reset-password'
           redirect={{
-            path: '/profile',
+            path: '/profile/me',
             when: UserState.LoggedIn,
           }}
         >
@@ -124,7 +122,7 @@ export const TabBar: FC<{}> = () => {
           lazyload
           path='/account/login'
           redirect={{
-            path: '/profile',
+            path: '/profile/me',
             when: UserState.LoggedIn,
           }}
         >
@@ -134,7 +132,7 @@ export const TabBar: FC<{}> = () => {
           lazyload
           path='/account/register'
           redirect={{
-            path: '/profile',
+            path: '/profile/me',
             when: UserState.LoggedIn,
           }}
         >
@@ -144,13 +142,17 @@ export const TabBar: FC<{}> = () => {
           lazyload
           path='/account'
           redirect={{
-            path: '/profile',
+            path: '/profile/me',
             when: UserState.LoggedIn,
           }}
         >
           <Account />
         </AppRoute>
-        <Redirect exact from='/' to={FEED_PATH} />
+        <Redirect exact from='/profile' to={'/profile/me' as AppRoutes} />
+        <AppRoute lazyload path='/profile'>
+          <Profile />
+        </AppRoute>
+        <Redirect exact from='/' to={'/feed' as AppRoutes} />
         <AppRoute lazyload path={null}>
           <Page404 />
         </AppRoute>

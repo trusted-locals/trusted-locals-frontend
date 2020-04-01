@@ -1,21 +1,38 @@
 import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Box, Button, Divider, Image, Text } from '@chakra-ui/core';
 
-import { LOCAL_STORAGE_AUTH_TOKEN_KEY, loggedOut, selectProfile } from './userSlice';
+import {
+  LOCAL_STORAGE_AUTH_TOKEN_KEY,
+  loggedOut,
+  selectOtherProfile,
+  selectOwnProfile,
+  Profile as ProfileType,
+  OtherProfile,
+} from './userSlice';
 
 import { responsiveBoxProps } from '../../app/styles';
 
-type Props = {} & RouteComponentProps;
+import { RootState } from '../../app/store';
 
-const PureProfile: FC<Props> = ({ history }: Props) => {
+export const Profile: FC<{}> = () => {
+  const history = useHistory();
+
+  const userNameParam: string | undefined = history.location.pathname.split('/profile/')[1];
+  const isOwnProfile = userNameParam === 'me' || userNameParam === undefined || userNameParam === '';
+  const username = isOwnProfile ? 'me' : userNameParam;
+
+  const selector: (state: RootState) => (ProfileType | null) | (OtherProfile | undefined) = isOwnProfile
+    ? selectOwnProfile
+    : selectOtherProfile(username);
+
   const dispatch = useDispatch();
-  const profile = useSelector(selectProfile);
+  const profile = useSelector(selector);
 
-  if (profile === null) {
+  if (!profile) {
     // TODO: Fetch profile.
-    return null;
+    return <h3>Should fetch data here. Will do that later.</h3>;
   }
 
   return (
@@ -47,21 +64,21 @@ const PureProfile: FC<Props> = ({ history }: Props) => {
         </Box>
       </Box>
       <Divider borderColor='gray.400' />
-      <Box marginTop={8}>
-        <Button
-          onClick={(): void => {
-            history.push('/account');
-            localStorage.removeItem(LOCAL_STORAGE_AUTH_TOKEN_KEY);
-            dispatch(loggedOut());
-          }}
-          variant='ghost'
-          variantColor='blue'
-        >
-          Log out
-        </Button>
-      </Box>
+      {isOwnProfile && (
+        <Box marginTop={8}>
+          <Button
+            onClick={(): void => {
+              history.push('/account');
+              localStorage.removeItem(LOCAL_STORAGE_AUTH_TOKEN_KEY);
+              dispatch(loggedOut());
+            }}
+            variant='ghost'
+            variantColor='blue'
+          >
+            Log out
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
-
-export const Profile = withRouter(PureProfile);

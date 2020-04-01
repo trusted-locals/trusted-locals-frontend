@@ -12,4 +12,5 @@ export type AppRoutes =
   | '/account/reset-password'
   | '/feed'
   | '/profile'
+  | '/profile/me'
   | '/submit';

@@ -13,18 +13,30 @@ type AsyncState = {
   loading: 'idle' | 'pending';
 };
 
+export type Profile = {
+  cityName: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  postsCount: number;
+  rating: number;
+  username: string;
+};
+
+export type OtherProfile = {
+  cityName: string;
+  firstName?: string;
+  lastName?: string;
+  postsCount: number;
+  rating: number;
+  username: string;
+};
+
 type State = {
   async: AsyncState;
   isLoggedIn: boolean;
-  profile: {
-    cityName: string;
-    email: string;
-    firstName?: string;
-    lastName?: string;
-    postsCount: number;
-    rating: number;
-    username: string;
-  } | null;
+  profile: Profile | null;
+  otherProfiles: { [key: string]: OtherProfile };
 };
 
 type LoginBody = {
@@ -90,6 +102,7 @@ export const slice = createSlice({
     },
     isLoggedIn: false,
     profile: null,
+    otherProfiles: {},
   } as State,
   reducers: {
     authTokenChecked: (state, action: PayloadAction<{ authTokenExists: boolean }>): void => {
@@ -156,7 +169,13 @@ export const selectIsLoggedIn = (state: RootState): State['isLoggedIn'] =>
     (isLoggedIn) => isLoggedIn,
   )(state);
 
-export const selectProfile = (state: RootState): State['profile'] =>
+export const selectOtherProfile = (username: string) => (state: RootState): OtherProfile | undefined =>
+  createSelector(
+    (state: RootState) => state.user.otherProfiles[username],
+    (otherProfile) => otherProfile,
+  )(state);
+
+export const selectOwnProfile = (state: RootState): Profile | null =>
   createSelector(
     (state: RootState) => state.user.profile,
     (profile) => profile,
