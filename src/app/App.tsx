@@ -22,7 +22,7 @@ export const App: FC = () => {
       <CSSReset />
       <HashRouter basename={ROUTER_BASENAME}>
         <Router history={history}>
-          <Box marginTop={4}>
+          <Box marginBottom={24}>
             <TabBar />
           </Box>
         </Router>

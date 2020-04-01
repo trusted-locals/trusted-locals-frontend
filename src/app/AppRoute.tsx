@@ -8,7 +8,7 @@ import { selectIsLoggedIn } from '../features/user/userSlice';
 
 import { AppRoutes } from './router';
 
-export const enum UserState {
+export enum UserState {
   LoggedIn,
   LoggedOut,
 }

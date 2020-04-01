@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
-import { Tab, TabList, TabPanels, Tabs } from '@chakra-ui/core';
+import { Box, Tab, TabList, TabPanels, Tabs } from '@chakra-ui/core';
 import { useWindowWidth } from '@react-hook/window-size';
 
 import { Feed } from './Feed';
@@ -45,7 +45,7 @@ export const FeedPage: FC = () => {
   const tabsSize = widthEM <= TABS_SIZE_BREAKPOINT_EM ? 'sm' : 'md';
 
   return (
-    <>
+    <Box marginTop={2}>
       <FeedHeader />
       <Tabs marginTop={6} size={tabsSize}>
         <TabList id={ARIA_TABS}>
@@ -75,6 +75,6 @@ export const FeedPage: FC = () => {
           </Switch>
         </TabPanels>
       </Tabs>
-    </>
+    </Box>
   );
 };
