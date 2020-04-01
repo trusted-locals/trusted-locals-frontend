@@ -157,7 +157,16 @@ export const TabBar: FC<{}> = () => {
       </Switch>
 
       <nav>
-        <Box borderTop='1px solid' borderColor='gray.300' bottom='0' display='flex' position='fixed' width='100%'>
+        <Box
+          backgroundColor='white'
+          borderTop='1px solid'
+          borderColor='gray.300'
+          bottom='0'
+          display='flex'
+          position='fixed'
+          width='100%'
+          zIndex={1}
+        >
           {buttons.map((buttonProps) => (
             <Box flex='1 1 0' key={buttonProps.name}>
               {/*
