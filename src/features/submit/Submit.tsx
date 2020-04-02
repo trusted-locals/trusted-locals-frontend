@@ -41,6 +41,8 @@ export const Submit: FC<{}> = () => {
   const [text, setText] = useState('');
   const imageInput = useRef(null);
 
+  // TODO: Display location
+
   return (
     <Box {...responsiveBoxProps}>
       <Heading as='h2'>Submit</Heading>

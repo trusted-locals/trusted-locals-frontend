@@ -7,14 +7,15 @@ import { TabBar } from '../components/TabBar';
 
 import { history, ROUTER_BASENAME } from './router';
 import { theme } from './styles';
-import { authTokenChecked, LOCAL_STORAGE_AUTH_TOKEN_KEY } from '../features/user/userSlice';
+import { authTokenChecked } from '../features/user/userSlice';
 
 export const App: FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const authTokenExists = !!localStorage.getItem(LOCAL_STORAGE_AUTH_TOKEN_KEY);
-    dispatch(authTokenChecked({ authTokenExists }));
+    // const authTokenExists = !!localStorage.getItem(LOCAL_STORAGE_AUTH_TOKEN_KEY);
+    // TODO: Preliminary.
+    dispatch(authTokenChecked({ authTokenExists: true }));
   }, [dispatch]);
 
   return (

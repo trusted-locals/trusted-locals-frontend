@@ -2,7 +2,8 @@ import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@chakra-ui/core';
 
-import { Category, loadRequested, selectByCategory } from './feedSlice';
+import { Post } from './Post';
+import { Category, loadRequested, Post as PostType, selectByCategory } from './feedSlice';
 
 import { RootState } from '../../app/store';
 
@@ -15,10 +16,10 @@ export const Feed: FC<Props> = ({ category }: Props) => {
   const { async, posts } = useSelector((state: RootState) => selectByCategory(state, category));
 
   useEffect(() => {
-    if (posts === null) {
+    if (async.error === null && posts === null) {
       dispatch(loadRequested(category));
     }
-  }, [category, dispatch, posts]);
+  }, [async, category, dispatch, posts]);
 
   if (async.error) {
     // TODO:
@@ -30,5 +31,19 @@ export const Feed: FC<Props> = ({ category }: Props) => {
     return <h1>Loading...</h1>;
   }
 
-  return <Box paddingX={4}>{category} feed</Box>;
+  if (posts === null) {
+    return <>TODO: Loading state</>;
+  }
+
+  if (Object.keys(posts).length === 0) {
+    return <>TODO: Empty state</>;
+  }
+
+  return (
+    <Box paddingX={4}>
+      {Object.values(posts).map((post: PostType) => (
+        <Post key={post.postID} {...post} />
+      ))}
+    </Box>
+  );
 };

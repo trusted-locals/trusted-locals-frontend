@@ -13,19 +13,14 @@ export type RootState = ReturnType<typeof rootReducer>;
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['feed', 'submit', 'user'],
-};
-
-const userPersistConfig = {
-  key: 'user',
-  storage: storage,
-  whitelist: ['profile'],
+  // TODO: Preliminary
+  blacklist: ['feed', 'profile', 'submit', 'user'],
 };
 
 const rootReducer = combineReducers({
   feed: feedReducer,
   submit: submitReducer,
-  user: persistReducer(userPersistConfig, userReducer),
+  user: userReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

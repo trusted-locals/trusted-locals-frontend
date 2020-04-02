@@ -21,6 +21,7 @@ export type Profile = {
   postsCount: number;
   rating: number;
   username: string;
+  imageURL?: string;
 };
 
 export type OtherProfile = {
@@ -30,13 +31,17 @@ export type OtherProfile = {
   postsCount: number;
   rating: number;
   username: string;
+  imageURL?: string;
 };
 
 type State = {
   async: AsyncState;
   isLoggedIn: boolean;
   profile: Profile | null;
-  otherProfile: OtherProfile | null;
+  otherProfile: {
+    async: AsyncState;
+    profile: OtherProfile | null;
+  };
 };
 
 type LoginBody = {
@@ -61,14 +66,30 @@ type RegistrationSuccess = {
   token: string;
 };
 
-const MOCKED_PROFILE = {
+type OpenedOtherProfileBody = {
+  username: string;
+};
+
+type OpenedOtherProfileSuccess = OtherProfile;
+
+const MOCKED_OWN_PROFILE: Profile = {
   cityName: 'Richmond',
   email: 'foo@bar.com',
-  firstName: 'Timothy',
-  lastName: 'Doe',
+  firstName: 'Oliver',
+  lastName: 'Micke',
   postsCount: 7,
   rating: 79,
-  username: 'foo_bar_123',
+  username: 'olivermicke',
+  imageURL: process.env.PUBLIC_URL + '/img/oliver-micke.jpg',
+};
+
+const MOCKED_OTHER_PROFILES: { [key: string]: OtherProfile } = {
+  emily_rose28: {
+    cityName: 'Richmond',
+    rating: 84,
+    postsCount: 7,
+    username: 'emily_rose28',
+  },
 };
 
 export const loggedIn = createAsyncThunk(`${SLICE_NAME}/loggedIn`, (body: LoginBody) =>
@@ -93,6 +114,11 @@ export const registered = createAsyncThunk(`${SLICE_NAME}/registered`, (body: Re
   }),
 );
 
+export const openedOtherProfile = createAsyncThunk(
+  `${SLICE_NAME}/openedOtherProfile`,
+  ({ username }: OpenedOtherProfileBody) => Promise.resolve(MOCKED_OTHER_PROFILES[username]),
+);
+
 export const slice = createSlice({
   name: SLICE_NAME,
   initialState: {
@@ -100,9 +126,15 @@ export const slice = createSlice({
       error: null,
       loading: 'idle',
     },
-    isLoggedIn: false,
-    profile: null,
-    otherProfile: null,
+    isLoggedIn: true,
+    profile: MOCKED_OWN_PROFILE,
+    otherProfile: {
+      async: {
+        error: null,
+        loading: 'idle',
+      },
+      profile: null,
+    },
   } as State,
   reducers: {
     authTokenChecked: (state, action: PayloadAction<{ authTokenExists: boolean }>): void => {
@@ -124,7 +156,7 @@ export const slice = createSlice({
         state.async.loading = 'idle';
         state.isLoggedIn = true;
         // TODO: Receive profile data from BE
-        state.profile = MOCKED_PROFILE;
+        state.profile = MOCKED_OWN_PROFILE;
       }
     },
     [loggedIn.rejected.type]: (state, action: { error: Error }): void => {
@@ -143,7 +175,7 @@ export const slice = createSlice({
         state.async.loading = 'idle';
         state.isLoggedIn = true;
         // TODO: Receive profile data from BE
-        state.profile = MOCKED_PROFILE;
+        state.profile = MOCKED_OWN_PROFILE;
       }
     },
     [registered.rejected.type]: (state, action: { error: Error }): void => {
@@ -151,6 +183,18 @@ export const slice = createSlice({
         state.async.loading = 'idle';
         state.async.error = action.error.message;
       }
+    },
+    [openedOtherProfile.pending.type]: (state): void => {
+      state.otherProfile.async.error = null;
+      state.otherProfile.async.loading = 'pending';
+    },
+    [openedOtherProfile.fulfilled.type]: (state, action: PayloadAction<OpenedOtherProfileSuccess>): void => {
+      state.otherProfile.async.loading = 'idle';
+      state.otherProfile.profile = action.payload;
+    },
+    [openedOtherProfile.rejected.type]: (state, action: { error: Error }): void => {
+      state.otherProfile.async.loading = 'idle';
+      state.otherProfile.async.error = action.error.message;
     },
   },
 });
@@ -171,7 +215,7 @@ export const selectIsLoggedIn = (state: RootState): State['isLoggedIn'] =>
 
 export const selectOtherProfile = (state: RootState): OtherProfile | null =>
   createSelector(
-    (state: RootState) => state.user.otherProfile,
+    (state: RootState) => state.user.otherProfile.profile,
     (otherProfile) => otherProfile,
   )(state);
 

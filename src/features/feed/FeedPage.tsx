@@ -64,7 +64,7 @@ export const FeedPage: FC = () => {
           ))}
         </TabList>
 
-        <TabPanels marginTop={8}>
+        <TabPanels marginTop={8} outline='none'>
           <Switch>
             {tabs.map(({ category, to }) => (
               <Route exact key={category} path={to}>

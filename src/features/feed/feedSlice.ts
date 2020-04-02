@@ -13,29 +13,48 @@ export type Category = 'news' | 'medical_supply' | 'grocery' | 'advice';
 
 const CATEGORIES: Category[] = ['advice', 'grocery', 'medical_supply', 'news'];
 
-type Post = {
-  category: Category;
-  date: string;
-  imageURL?: string;
-  rating: number;
+export type Post = {
+  postID: number;
+  categories: Category[];
+  date: number;
+  imageURL: string | null;
+  rating: number | null;
   text: string;
   title: string;
-  userImageURL?: string;
-  username: number;
+  userImageURL: string | null;
+  username: string;
 };
 
-type Categories = { [key in Category]: { async: AsyncState; posts: Post[] | null } };
+type Categories = { [key in Category]: { async: AsyncState; posts: { [postID: number]: Post } | null } };
 
 type State = {
   categories: Categories;
 };
 
-export const loadRequested = createAsyncThunk(`${SLICE_NAME}/loadRequested`, (_category: Category) =>
-  Promise.resolve([
-    {
-      a: true,
+const generateRandomDate = (): number => new Date().setHours(new Date().getHours() - 2);
+
+const MOCKED_CATEGORIES: { [category in Category]: { [postID: number]: Post } } = {
+  news: {
+    1: {
+      categories: ['news'],
+      date: generateRandomDate(),
+      postID: 1,
+      rating: 74,
+      text:
+        'Service disconnection has been suspended. Lorem ipsum dolor sit amet. Amet sit dolor ipsum lorem? Lorem ipsum dolor sit amet!',
+      title: 'Service disconnection has been suspended',
+      username: 'emily_rose28',
+      imageURL: 'https://via.placeholder.com/350x150',
+      userImageURL: 'https://via.placeholder.com/350x150',
     },
-  ]),
+  },
+  medical_supply: {},
+  advice: {},
+  grocery: {},
+};
+
+export const loadRequested = createAsyncThunk(`${SLICE_NAME}/loadRequested`, (category: Category) =>
+  Promise.resolve(MOCKED_CATEGORIES[category]),
 );
 
 export const slice = createSlice({
@@ -67,7 +86,7 @@ export const slice = createSlice({
         async.loading = 'pending';
       }
     },
-    [loadRequested.fulfilled.type]: (state, action: PayloadAction<Post[]>): void => {
+    [loadRequested.fulfilled.type]: (state, action: PayloadAction<{ [postID: number]: Post }>): void => {
       // @ts-ignore
       const category: Category = action.meta.arg;
 
