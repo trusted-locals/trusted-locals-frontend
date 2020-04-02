@@ -41,7 +41,7 @@ export const Profile: FC<{}> = () => {
     <Box {...responsiveBoxProps}>
       <Box>
         <Box alignItems='center' display='flex' flexDirection='column' marginTop={8}>
-          <Avatar size='lg' src={profile.imageURL ?? ''} />
+          <Avatar size='lg' name={profile.username} src={profile.imageURL ?? ''} />
           <Text color='gray.600' fontWeight='semibold' marginTop={2}>
             {profile.firstName ? `${profile.firstName} ${profile.lastName}` : profile.username}
           </Text>
