@@ -35,5 +35,6 @@ jobs:
           minAccessibilityScore: '80'
           minBestPracticesScore: '80'
           minPerformanceScore: '80'
-          minProgressiveWebAppScore: '80'
+          # Preliminary
+          # minProgressiveWebAppScore: '80'
           minSeoScore: '80'

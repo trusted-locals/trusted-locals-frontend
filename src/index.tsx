@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { App } from './app/App';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
-import { register } from './serviceWorker';
+import { unregister } from './serviceWorker';
 
 ReactDOM.render(
   <StrictMode>
@@ -14,4 +14,5 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-register();
+// Preliminary
+unregister();
