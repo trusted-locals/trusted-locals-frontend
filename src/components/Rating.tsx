@@ -20,7 +20,7 @@ const colorForRating = (rating: Post['rating']): string => {
 
 const descriptionForRating = (rating: Post['rating']): string => {
   if (rating === null || rating < 40) {
-    return CONFIDENT;
+    return NOT_CONFIDENT;
   }
 
   if (rating >= 40 && rating <= 70) {
