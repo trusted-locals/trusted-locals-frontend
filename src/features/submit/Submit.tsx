@@ -10,10 +10,13 @@ import {
   FormLabel,
   Heading,
   Input,
+  Text,
   Textarea,
+  useToast,
 } from '@chakra-ui/core';
 
 import { selectAsync, submitted } from './submitSlice';
+import { selectOwnProfile } from '../user/userSlice';
 
 import { responsiveBoxProps } from '../../app/styles';
 
@@ -35,7 +38,10 @@ const ARIA_IMAGE_HELPER_TEXT = 'post-image-helper-text';
 export const Submit: FC<{}> = () => {
   const dispatch = useDispatch();
 
+  const toast = useToast();
+
   const { error, loading } = useSelector(selectAsync);
+  const ownProfile = useSelector(selectOwnProfile);
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
@@ -45,7 +51,16 @@ export const Submit: FC<{}> = () => {
 
   return (
     <Box {...responsiveBoxProps}>
-      <Heading as='h2'>Submit</Heading>
+      <Heading as='h2' size='lg'>
+        Submit a post
+      </Heading>
+
+      {ownProfile && (
+        <Text color='gray.600' marginTop={8}>
+          This post will only appear in the feed of {ownProfile.cityName}.
+        </Text>
+      )}
+
       <form
         onSubmit={(e): void => {
           e.preventDefault();
@@ -58,6 +73,14 @@ export const Submit: FC<{}> = () => {
               title,
             }),
           );
+
+          toast({
+            title: "Post couldn't be saved",
+            description: 'This demo does not save submitted posts yet.',
+            status: 'info',
+            duration: 9000,
+            isClosable: true,
+          });
         }}
       >
         <FormControl marginTop={8}>

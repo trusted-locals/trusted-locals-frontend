@@ -18,7 +18,11 @@ export const Post: FC<Props> = ({ date, imageURL, postID, rating, title, userIma
 
   return (
     <>
-      <Box boxShadow='0px 8px 12px rgba(42, 52, 61, 0.16078431372549)' borderRadius={BORDER_RADIUS} maxWidth={300}>
+      <Box
+        boxShadow='0px 8px 12px rgba(42, 52, 61, 0.16078431372549)'
+        borderRadius={BORDER_RADIUS}
+        maxWidth={['initial', 'initial', 350]}
+      >
         <Box height={128} position='relative'>
           <Text
             {...paddingProps}
@@ -59,7 +63,7 @@ export const Post: FC<Props> = ({ date, imageURL, postID, rating, title, userIma
         </Box>
 
         <Box {...paddingProps} alignItems='center' display='flex'>
-          <Rating rating={rating} />
+          <Rating rating={rating} shouldShowDescription={false} />
           <Button
             onClick={(): void => {
               history.push(`/feed/detail/${postID}`);

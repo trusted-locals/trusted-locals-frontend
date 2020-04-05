@@ -9,6 +9,8 @@ import { FeedHeader } from './FeedHeader';
 
 import { Category } from './feedSlice';
 
+import { responsiveBoxProps } from '../../app/styles';
+
 import { convertWidthToEM } from '../../utils/dom-utils';
 
 const ARIA_TABS = 'tabs';
@@ -49,8 +51,8 @@ export const FeedPage: FC = () => {
   return (
     <Box marginTop={2}>
       <FeedHeader />
-      <Tabs marginTop={6} size={tabsSize}>
-        <TabList id={ARIA_TABS}>
+      <Tabs marginTop={[6, 6, 8]} size={tabsSize}>
+        <TabList id={ARIA_TABS} {...responsiveBoxProps} width={['100%', '100%', '90%', '80%', '70%']}>
           {tabs.map(({ id, name, to }) => (
             <Tab
               aria-controls={ARIA_TABS}
@@ -66,7 +68,7 @@ export const FeedPage: FC = () => {
           ))}
         </TabList>
 
-        <TabPanels marginTop={8} outline='none'>
+        <TabPanels marginTop={8} outline='none' {...responsiveBoxProps}>
           <Switch>
             {tabs.map(({ category, to }) => (
               <Route exact key={category} path={to}>

@@ -16,12 +16,14 @@ import {
   Image,
   Tag,
   Text,
+  useToast,
 } from '@chakra-ui/core';
 
 import { Author } from '../../components/Author';
 import { Rating } from '../../components/Rating';
 
 import { postRequested, selectPostByID } from './feedSlice';
+import { selectOwnProfile } from '../user/userSlice';
 
 import { convertWidthToEM } from '../../utils/dom-utils';
 
@@ -37,6 +39,10 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
   const dispatch = useDispatch();
 
   const history = useHistory();
+
+  const toast = useToast();
+
+  const ownProfile = useSelector(selectOwnProfile);
 
   // Workaround for hidden header on mobile devices
   const widthPX = useWindowWidth(0, {
@@ -69,6 +75,18 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
   const onClose = (): void => {
     const nextPath = previousPathname ?? '/';
     history.push(nextPath);
+  };
+
+  const onVote = (): void => {
+    toast({
+      title: 'Vote saved.',
+      description: `Thank you for making ${
+        ownProfile?.cityName ? `content in ${ownProfile.cityName}` : 'local content'
+      } more reliable.`,
+      status: 'success',
+      duration: 9000,
+      isClosable: true,
+    });
   };
 
   return (
@@ -105,10 +123,12 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
             </Text>
             <Divider borderColor='gray.300' height='80%' orientation='vertical' />
             <div
+              // eslint-disable-next-line
               onClick={(event): void => {
                 // Prevent Drawer#onClose from being called so history#push isn't called.
                 event.stopPropagation();
               }}
+              role='presentation'
             >
               <Author
                 style={{
@@ -131,37 +151,42 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
           </Box>
 
           <Box display='flex' marginTop={6}>
-            <Box flex={3} marginRight={4}>
-              <Text as='h3' color='gray.600' fontWeight='semibold' marginBottom={1}>
-                Confidence score:
-              </Text>
-              <Text>
-                Based on information gathered, we do not have enough information to be confident of this data.
-              </Text>
-            </Box>
-            <Box flex={1}>
-              <Rating
-                boxProps={{
-                  height: '100%',
-                  width: '100%',
-                  maxWidth: 70,
-                  maxHeight: 70,
-                }}
-                labelProps={{
-                  fontSize: '16px',
-                }}
-                rating={rating}
-              />
-            </Box>
+            <Rating
+              boxProps={{
+                height: '100%',
+                width: '100%',
+                maxWidth: 70,
+                maxHeight: 70,
+              }}
+              labelProps={{
+                fontSize: '16px',
+              }}
+              rating={rating}
+              shouldShowDescription
+            />
           </Box>
         </DrawerBody>
 
         <DrawerFooter maxWidth='1000px' width={['initial', 'initial', 1000]} margin={['initial', 'initial', '0 auto']}>
-          <Button onClick={onClose} variant='ghost' variantColor='blue'>
-            Unreliable
+          <Button
+            onClick={(): void => {
+              onVote();
+              onClose();
+            }}
+            variant='ghost'
+            variantColor='blue'
+          >
+            Disconfirm
           </Button>
-          <Button marginLeft={4} onClick={onClose} variantColor='blue'>
-            Reliable
+          <Button
+            marginLeft={4}
+            onClick={(): void => {
+              onVote();
+              onClose();
+            }}
+            variantColor='blue'
+          >
+            Confirm
           </Button>
         </DrawerFooter>
       </DrawerContent>

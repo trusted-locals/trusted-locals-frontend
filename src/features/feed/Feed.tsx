@@ -40,7 +40,12 @@ export const Feed: FC<Props> = ({ category }: Props) => {
   }
 
   return (
-    <Box paddingX={4}>
+    <Box
+      display='grid'
+      gridTemplateColumns={['100%', 'repeat(2, 1fr)', 'repeat(3, 1fr)', 'repeat(4, 1fr)']}
+      gridGap={8}
+      marginTop={8}
+    >
       {Object.values(posts).map((post: PostType) => (
         <Post key={post.postID} {...post} />
       ))}

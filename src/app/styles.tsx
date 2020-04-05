@@ -4,7 +4,7 @@ import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
 import { BoxProps, DefaultTheme, theme as chakraTheme } from '@chakra-ui/core';
 
 export const responsiveBoxProps: BoxProps = {
-  marginTop: 4,
+  marginTop: [4, 4, 8],
   marginX: 'auto',
   width: [
     '80%', // base

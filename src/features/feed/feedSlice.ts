@@ -2,6 +2,8 @@ import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@r
 
 import { RootState } from '../../app/store';
 
+import { MOCKED_CATEGORIES, MOCKED_POSTS } from './mocks';
+
 const SLICE_NAME = 'feed';
 
 type AsyncState = {
@@ -23,9 +25,9 @@ export type Post = {
   username: string;
 };
 
-type Posts = { [key in Post['postID']]: Post };
+export type Posts = { [key in Post['postID']]: Post };
 
-type Categories = { [key in Category]: { async: AsyncState; postIDs: number[] | null } };
+export type Categories = { [key in Category]: { async: AsyncState; postIDs: number[] | null } };
 
 type State = {
   categories: Categories;
@@ -35,46 +37,6 @@ type State = {
       post: Post | null;
     };
   };
-};
-
-const generateRandomDate = (): number => new Date().setHours(new Date().getHours() - 2);
-
-const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
-  1: {
-    categories: ['news'] as Category[],
-    date: generateRandomDate(),
-    postID: 1,
-    rating: 74,
-    text:
-      'Service disconnection has been suspended. Lorem ipsum dolor sit amet. Amet sit dolor ipsum lorem? Lorem ipsum dolor sit amet!',
-    title: 'Service disconnection has been suspended',
-    username: 'emily_rose28',
-    imageURL: 'https://via.placeholder.com/350x150',
-    userImageURL: 'https://via.placeholder.com/350x150',
-  },
-  2: {
-    categories: ['news', 'advice'] as Category[],
-    date: generateRandomDate(),
-    postID: 2,
-    rating: 74,
-    text: 'Bli bla blub',
-    title: 'Blub',
-    username: 'emily_rose28',
-    imageURL: 'https://via.placeholder.com/350x150',
-    userImageURL: 'https://via.placeholder.com/350x150',
-  },
-};
-
-const MOCKED_CATEGORIES: { [category in Category]: { [postID in Post['postID']]: Post } } = {
-  news: {
-    1: MOCKED_POSTS[1],
-    2: MOCKED_POSTS[2],
-  },
-  medical_supply: {},
-  advice: {
-    2: MOCKED_POSTS[2],
-  },
-  grocery: {},
 };
 
 export const loadRequested = createAsyncThunk(`${SLICE_NAME}/loadRequested`, (category: Category) =>

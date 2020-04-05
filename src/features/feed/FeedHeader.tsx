@@ -1,12 +1,29 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Button, Icon, Input, InputGroup, InputLeftElement, Text } from '@chakra-ui/core';
+import {
+  Box,
+  Button,
+  Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useToast,
+} from '@chakra-ui/core';
 
 import { selectOwnProfile } from '../user/userSlice';
 
-import { AppRoutes } from '../../app/router';
 import { responsiveBoxProps } from '../../app/styles';
+
+import { AppRoutes } from '../../app/router';
 
 type Props = {};
 
@@ -29,6 +46,13 @@ const Location: FC<{}> = () => {
 export const FeedHeader: FC<Props> = (_props: Props) => {
   const profile = useSelector(selectOwnProfile);
 
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+  const onModalClose = (): void => {
+    setModalIsOpen(false);
+  };
+
+  const toast = useToast();
+
   if (!profile) {
     return (
       <Box {...responsiveBoxProps}>
@@ -43,19 +67,66 @@ export const FeedHeader: FC<Props> = (_props: Props) => {
   }
 
   return (
-    <Box paddingX={4}>
+    <Box {...responsiveBoxProps}>
       <Text color='gray.600' fontSize='lg'>
         Good morning, {profile.firstName || profile.cityName}
       </Text>
-      <Text color='gray.600' fontSize='lg' marginTop={1}>
+      <Text
+        color='gray.600'
+        cursor='pointer'
+        fontSize='lg'
+        marginTop={1}
+        onClick={(): void => {
+          setModalIsOpen(true);
+        }}
+      >
         Here are the latest for <Location />
       </Text>
       <InputGroup marginTop={4}>
         <InputLeftElement>
           <Icon color='gray.400' name='search' />
         </InputLeftElement>
-        <Input placeholder={INPUT_PLACEHOLDER} type='text' />
+        <Input
+          maxWidth={400}
+          onFocus={(): void => {
+            toast({
+              title: 'Not yet implemented',
+              description: 'This demo does not support searching posts yet.',
+              status: 'info',
+              duration: 9000,
+              isClosable: true,
+            });
+          }}
+          placeholder={INPUT_PLACEHOLDER}
+          type='text'
+        />
       </InputGroup>
+
+      <Modal isOpen={modalIsOpen} onClose={onModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Changing the feed&apos;s location</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text fontWeight='semibold'>Not yet implemented</Text>
+            <Text marginTop={4}>
+              Here you will be able to change the feed&apos;s location and see posts from all over the world. However,
+              creating posts and validating other posts is restricted to your location.
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              onClick={(): void => {
+                setModalIsOpen(false);
+              }}
+              variantColor='blue'
+            >
+              OK
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
