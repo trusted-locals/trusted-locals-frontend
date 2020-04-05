@@ -78,7 +78,7 @@ export const Submit: FC<{}> = () => {
             title: "Post couldn't be saved",
             description: 'This demo does not save submitted posts yet.',
             status: 'info',
-            duration: 9000,
+            duration: 7000,
             isClosable: true,
           });
         }}

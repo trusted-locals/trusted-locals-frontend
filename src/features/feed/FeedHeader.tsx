@@ -94,7 +94,7 @@ export const FeedHeader: FC<Props> = (_props: Props) => {
               title: 'Not yet implemented',
               description: 'This demo does not support searching posts yet.',
               status: 'info',
-              duration: 9000,
+              duration: 7000,
               isClosable: true,
             });
           }}

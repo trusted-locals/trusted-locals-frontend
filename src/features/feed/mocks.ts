@@ -10,34 +10,21 @@ const generateRandomDate = (start = new Date(Date.now() - 100000000), end = new 
 
 export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
   1: {
-    categories: ['news', 'medical_supply'] as Category[],
-    date: generateRandomDate(),
-    postID: 1,
-    rating: 74,
-    text:
-      'Found some N95 masks available in the home depot in Henrico. I saw at least 3 boxes when I was there at around 9:30 AM',
-    title: 'N95 masks available again in Home Depot in Henrico',
-    username: 'olivermicke',
-    imageURL:
-      'https://d1icd6shlvmxi6.cloudfront.net/gsc/X9IVK7/3c/bd/d1/3cbdd1179713474eabfb78be3cf8629b/images/home_screen/rectangle_u179.svg?token=be03a14c6f0ed738daf690859452a87a150fdecde15c5a477fd7def9bb5fb483',
-    userImageURL: PROFILE_IMAGE_OLIVER_MICKE,
-  },
-  2: {
     categories: ['news'] as Category[],
     date: generateRandomDate(),
-    postID: 2,
+    postID: 1,
     rating: 23,
     text: 'Lorem ipsum dolor sit amet.',
     title: 'VCU Developed CODVID-19 test',
     username: 'olivermicke',
     imageURL:
-      'https://d1icd6shlvmxi6.cloudfront.net/gsc/X9IVK7/3c/bd/d1/3cbdd1179713474eabfb78be3cf8629b/images/home_screen/rectangle_u82.svg?token=03f8946f6d34850c79b1d05c4aea91b82cc010f882f8813cf39a69c9c3ab2b26',
+      'https://images.unsplash.com/photo-1511174511562-5f7f18b874f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
     userImageURL: PROFILE_IMAGE_OLIVER_MICKE,
   },
-  3: {
+  2: {
     categories: ['grocery'] as Category[],
     date: generateRandomDate(),
-    postID: 3,
+    postID: 2,
     rating: 72,
     text:
       'We will have a limited supply of toilet paper at Target on Broad street for the next days – source: I work there.',
@@ -46,6 +33,19 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
     imageURL:
       'https://images.unsplash.com/photo-1584556812952-905ffd0c611a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
     userImageURL: PROFILE_IMAGE_EMILY_ROSE28,
+  },
+  3: {
+    categories: ['news', 'medical_supply'] as Category[],
+    date: generateRandomDate(),
+    postID: 3,
+    rating: 74,
+    text:
+      'Found some N95 masks available in the home depot in Henrico. I saw at least 3 boxes when I was there at around 9:30 AM',
+    title: 'N95 masks available again in Home Depot in Henrico',
+    username: 'olivermicke',
+    imageURL:
+      'https://images.unsplash.com/photo-1584462198614-03c2a523945d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
+    userImageURL: PROFILE_IMAGE_OLIVER_MICKE,
   },
   4: {
     categories: ['advice'] as Category[],
@@ -77,8 +77,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
     date: generateRandomDate(),
     postID: 6,
     rating: 84,
-    text:
-      'Service disconnection has been suspended. Lorem ipsum dolor sit amet. Amet sit dolor ipsum lorem? Lorem ipsum dolor sit amet!',
+    text: 'Service disconnection has just been suspended!',
     title: 'Service disconnection has been suspended',
     username: 'emily_rose28',
     imageURL:
@@ -90,15 +89,15 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
 export const MOCKED_CATEGORIES: { [category in Category]: { [postID in Post['postID']]: Post } } = {
   news: {
     1: MOCKED_POSTS[1],
-    2: MOCKED_POSTS[2],
+    3: MOCKED_POSTS[3],
     5: MOCKED_POSTS[5],
     6: MOCKED_POSTS[6],
   },
   medical_supply: {
-    1: MOCKED_POSTS[1],
+    3: MOCKED_POSTS[3],
   },
   grocery: {
-    3: MOCKED_POSTS[3],
+    2: MOCKED_POSTS[2],
     5: MOCKED_POSTS[5],
   },
   advice: {

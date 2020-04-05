@@ -108,7 +108,7 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
         ownProfile?.cityName ? `content in ${ownProfile.cityName}` : 'local content'
       } more reliable.`,
       status: 'success',
-      duration: 9000,
+      duration: 7000,
       isClosable: true,
     });
   };
