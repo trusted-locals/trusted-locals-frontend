@@ -1,9 +1,10 @@
 import React, { FC } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Box, Button, Image, Text } from '@chakra-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
+import { Box, Button, Image, Text, Link } from '@chakra-ui/core';
 
 import { Author } from '../../components/Author';
 import { Rating } from '../../components/Rating';
+import { TimeAgo } from '../../components/TimeAgo';
 
 import { Post as PostType } from './feedSlice';
 
@@ -14,7 +15,7 @@ const paddingProps = { padding: 2 };
 const BORDER_RADIUS = 8;
 
 export const Post: FC<Props> = ({ date, imageURL, postID, rating, title, userImageURL, username }: Props) => {
-  const history = useHistory();
+  const linkToDetailView = `/feed/detail/${postID}`;
 
   return (
     <>
@@ -24,17 +25,20 @@ export const Post: FC<Props> = ({ date, imageURL, postID, rating, title, userIma
         maxWidth={['initial', 'initial', 350]}
       >
         <Box height={128} position='relative'>
-          <Text
+          <Link
             {...paddingProps}
-            background='#ffffffaa'
             // @ts-ignore
+            as={RouterLink}
+            background='#ffffffdd'
             borderTopRightRadius={BORDER_RADIUS}
             bottom={0}
             position='absolute'
+            // @ts-ignore
+            to={linkToDetailView}
             width='80%'
           >
             {title}
-          </Text>
+          </Link>
 
           {imageURL && (
             <Image
@@ -54,7 +58,7 @@ export const Post: FC<Props> = ({ date, imageURL, postID, rating, title, userIma
         <Box {...paddingProps}>
           <Box>
             <Text color='gray.500' fontSize='sm'>
-              {new Date(date).toDateString()}
+              <TimeAgo date={new Date(date)} />
             </Text>
           </Box>
           <Box marginTop={2}>
@@ -65,10 +69,10 @@ export const Post: FC<Props> = ({ date, imageURL, postID, rating, title, userIma
         <Box {...paddingProps} alignItems='center' display='flex'>
           <Rating rating={rating} shouldShowDescription={false} />
           <Button
-            onClick={(): void => {
-              history.push(`/feed/detail/${postID}`);
-            }}
+            as={RouterLink}
             marginLeft={6}
+            // @ts-ignore
+            to={linkToDetailView}
             variant='outline'
             variantColor='blue'
           >

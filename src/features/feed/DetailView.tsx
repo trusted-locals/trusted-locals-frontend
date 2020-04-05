@@ -21,6 +21,7 @@ import {
 
 import { Author } from '../../components/Author';
 import { Rating } from '../../components/Rating';
+import { TimeAgo } from '../../components/TimeAgo';
 
 import { postRequested, selectPostByID } from './feedSlice';
 import { selectOwnProfile } from '../user/userSlice';
@@ -29,7 +30,8 @@ import { convertWidthToEM } from '../../utils/dom-utils';
 
 import { RootState } from '../../app/store';
 
-const MOBILE_BREAKPOINT_EM = 48;
+const HANDHELD_BREAKPOINT = 48;
+const MOBILE_BREAKPOINT_EM = 30;
 
 type Props = {
   previousPathname?: string;
@@ -50,7 +52,9 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
     wait: 250,
   });
   const widthEM = convertWidthToEM(widthPX);
-  const deviceSpecificProps = widthEM <= MOBILE_BREAKPOINT_EM ? { marginTop: 24 } : {};
+  // TODO: iOS only
+  const deviceSpecificProps = widthEM <= HANDHELD_BREAKPOINT ? { marginTop: 24 } : {};
+  const isFullHeight = widthEM <= MOBILE_BREAKPOINT_EM;
 
   const postID: string | null = match.params.postID ?? null;
 
@@ -90,7 +94,7 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
   };
 
   return (
-    <Drawer scrollBehavior='inside' isFullHeight isOpen onClose={onClose} placement='bottom'>
+    <Drawer scrollBehavior='inside' isFullHeight={isFullHeight} isOpen onClose={onClose} placement='bottom'>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton {...deviceSpecificProps} aria-label='return to feed' />
@@ -119,7 +123,7 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
               fontWeight='normal'
               height='100%'
             >
-              {new Date(date).toDateString()}
+              <TimeAgo date={new Date(date)} />
             </Text>
             <Divider borderColor='gray.300' height='80%' orientation='vertical' />
             <div
@@ -150,7 +154,7 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
             <Text>{text}</Text>
           </Box>
 
-          <Box display='flex' marginTop={6}>
+          <Box display='flex' marginTop={16}>
             <Rating
               boxProps={{
                 height: '100%',

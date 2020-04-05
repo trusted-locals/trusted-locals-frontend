@@ -1,9 +1,12 @@
 import { Category, Post } from './feedSlice';
 
 const PROFILE_IMAGE_OLIVER_MICKE = process.env.PUBLIC_URL + '/img/oliver-micke.jpg';
-const PROFILE_IMAGE_EMILY_ROSE = 'https://via.placeholder.com/350x150';
+const PROFILE_IMAGE_EMILY_ROSE =
+  'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=60';
 
-const generateRandomDate = (): number => new Date().setHours(new Date().getHours() - 2);
+// https://stackoverflow.com/questions/9035627/elegant-method-to-generate-array-of-random-dates-within-two-dates/9035732#9035732
+const generateRandomDate = (start = new Date(Date.now() - 100000000), end = new Date()): number =>
+  +new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 
 export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
   1: {
