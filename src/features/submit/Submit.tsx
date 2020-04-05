@@ -41,7 +41,7 @@ export const Submit: FC<{}> = () => {
   const toast = useToast();
 
   const { error, loading } = useSelector(selectAsync);
-  const ownProfile = useSelector(selectOwnProfile);
+  const ownProfile = useSelector(selectOwnProfile).profile ?? null;
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');

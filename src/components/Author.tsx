@@ -19,10 +19,10 @@ export const Author: FC<Props> = ({ style, userImageURL, username }: Props) => {
 
   return (
     <Link as={RouterLink} to={profilePath} style={style}>
+      {userImageURL && <Avatar marginRight={2} name={username} size='xs' src={userImageURL ?? ''} />}
       <Text as='span' color='blue.500' fontSize='sm'>
         {username}
       </Text>
-      {userImageURL && <Avatar marginLeft={4} name={username} size='xs' src={userImageURL ?? ''} />}
     </Link>
   );
 };

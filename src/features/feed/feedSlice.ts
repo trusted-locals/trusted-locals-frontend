@@ -47,6 +47,18 @@ export const postRequested = createAsyncThunk(`${SLICE_NAME}/postRequested`, (po
   Promise.resolve({ post: MOCKED_POSTS[postID] }),
 );
 
+export const requestedPostsByIDs = createAsyncThunk(`${SLICE_NAME}/requestedPostsByIDs`, (postIDs: Post['postID'][]) =>
+  Promise.resolve({
+    posts: postIDs.reduce(
+      (acc, postID) => ({
+        ...acc,
+        [postID]: MOCKED_POSTS[postID],
+      }),
+      {},
+    ),
+  }),
+);
+
 const initialState: State = {
   categories: {
     advice: {
@@ -144,12 +156,51 @@ export const slice = createSlice({
       post.post = null;
       state.posts[postID] = post;
     },
+    // eslint-disable-next-line
+    [requestedPostsByIDs.pending.type]: (_state, _action): void => {},
+    [requestedPostsByIDs.fulfilled.type]: (state, action: PayloadAction<{ posts: Posts }>): void => {
+      // NOTE: Copied from above. Refactor.
+
+      const normalizedPosts = Object.values(action.payload.posts).reduce(
+        (acc, post) => ({
+          ...acc,
+          [post.postID]: {
+            async: {
+              error: null,
+              loading: 'idle',
+            },
+            post,
+          },
+        }),
+        {},
+      );
+
+      Object.assign(state.posts, normalizedPosts);
+    },
+    // eslint-disable-next-line
+    [requestedPostsByIDs.rejected.type]: (_state, _action: { error: Error }): void => {},
   },
 });
 
 export const selectPostByID = (state: RootState, postID: number): State['posts'][Post['postID']] | null =>
   createSelector(
     (state: RootState) => state.feed.posts[postID] ?? null,
+    (post) => post,
+  )(state);
+
+export const selectPostsByIDs = (state: RootState, postIDs: number[]): State['posts'] =>
+  createSelector(
+    (state: RootState) =>
+      postIDs
+        .map((postID) => state.feed.posts[postID] ?? null)
+        .filter(Boolean)
+        .reduce(
+          (acc, post) => ({
+            ...acc,
+            [post.post?.postID as number]: post,
+          }),
+          {},
+        ),
     (post) => post,
   )(state);
 

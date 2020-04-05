@@ -4,19 +4,17 @@ type Props = {
   date: Date;
 };
 
-export const TimeAgo: FC<Props> = ({ date }: Props) => <>{timeSince(date)} ago</>;
-
 // https://stackoverflow.com/questions/3177836/how-to-format-time-since-xxx-e-g-4-minutes-ago-similar-to-stack-exchange-site/23259289#23259289
-function timeSince(date: Date): string {
+const timeSince = (date: Date): string => {
   if (typeof date !== 'object') {
     date = new Date(date);
   }
 
   // @ts-ignore
-  var seconds = Math.floor((new Date() - date) / 1000);
-  var intervalType;
+  const seconds = Math.floor((new Date() - date) / 1000);
+  let intervalType;
 
-  var interval = Math.floor(seconds / 31536000);
+  let interval = Math.floor(seconds / 31536000);
   if (interval >= 1) {
     intervalType = 'year';
   } else {
@@ -49,4 +47,6 @@ function timeSince(date: Date): string {
   }
 
   return interval + ' ' + intervalType;
-}
+};
+
+export const TimeAgo: FC<Props> = ({ date }: Props) => <>{timeSince(date)} ago</>;

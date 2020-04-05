@@ -30,7 +30,7 @@ type Props = {};
 const INPUT_PLACEHOLDER = 'Use keywords to search for information';
 
 const Location: FC<{}> = () => {
-  const profile = useSelector(selectOwnProfile);
+  const profile = useSelector(selectOwnProfile).profile ?? null;
 
   if (profile === null) {
     return null;
@@ -44,7 +44,7 @@ const Location: FC<{}> = () => {
 };
 
 export const FeedHeader: FC<Props> = (_props: Props) => {
-  const profile = useSelector(selectOwnProfile);
+  const profile = useSelector(selectOwnProfile).profile ?? null;
 
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const onModalClose = (): void => {
@@ -87,6 +87,7 @@ export const FeedHeader: FC<Props> = (_props: Props) => {
           <Icon color='gray.400' name='search' />
         </InputLeftElement>
         <Input
+          fontSize={['xs', 'sm', 'md']}
           maxWidth={400}
           onFocus={(): void => {
             toast({

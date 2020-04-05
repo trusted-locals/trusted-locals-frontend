@@ -55,7 +55,7 @@ export const Rating: FC<Props> = ({ boxProps, labelProps, rating, shouldShowDesc
   return (
     <Box display='flex' flex={1}>
       <Box flex={3} marginRight={4}>
-        <Text as='h3' color='gray.600' fontWeight='semibold' marginBottom={1}>
+        <Text as='h3' color='gray.700' fontWeight='semibold' marginBottom={1}>
           Confidence score:
         </Text>
         <Text>{descriptionForRating(rating)}</Text>
