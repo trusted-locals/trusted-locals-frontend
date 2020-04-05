@@ -34,13 +34,14 @@ export const Profile: FC<{}> = () => {
 
   useEffect(() => {
     dispatch(requestedPostsOfUser({ isOwnProfile, userNameParam: userNameParam ?? '' }));
-  }, [dispatch, isOwnProfile, userNameParam]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (!profile) {
       dispatch(openedOtherProfile({ username: userNameParam }));
     }
-  }, [dispatch, profile, userNameParam]);
+  });
 
   if (!profile) {
     // TODO: Fetch profile.

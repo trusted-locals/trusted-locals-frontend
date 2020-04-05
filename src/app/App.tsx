@@ -21,7 +21,6 @@ export const App: FC = () => {
 
   useEffect((): void => {
     const value = localStorage.getItem(DID_SEE_WELCOME_DRAWER_KEY);
-    console.log(value);
     setShouldShowDrawer(value !== 'true');
   }, []);
 
