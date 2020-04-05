@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@chakra-ui/core';
 
 import { Post } from './Post';
-import { Category, loadRequested, Post as PostType, selectByCategory } from './feedSlice';
+import { Category, loadRequested, Post as PostType, selectPostsByCategory } from './feedSlice';
 
 import { RootState } from '../../app/store';
 
@@ -13,7 +13,7 @@ type Props = {
 
 export const Feed: FC<Props> = ({ category }: Props) => {
   const dispatch = useDispatch();
-  const { async, posts } = useSelector((state: RootState) => selectByCategory(state, category));
+  const { async, posts } = useSelector((state: RootState) => selectPostsByCategory(state, category));
 
   useEffect(() => {
     if (async.error === null && posts === null) {

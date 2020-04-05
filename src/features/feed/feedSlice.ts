@@ -11,8 +11,6 @@ type AsyncState = {
 
 export type Category = 'news' | 'medical_supply' | 'grocery' | 'advice';
 
-const CATEGORIES: Category[] = ['advice', 'grocery', 'medical_supply', 'news'];
-
 export type Post = {
   postID: number;
   categories: Category[];
@@ -25,55 +23,93 @@ export type Post = {
   username: string;
 };
 
-type Categories = { [key in Category]: { async: AsyncState; posts: { [postID: number]: Post } | null } };
+type Posts = { [key in Post['postID']]: Post };
+
+type Categories = { [key in Category]: { async: AsyncState; postIDs: number[] | null } };
 
 type State = {
   categories: Categories;
+  posts: {
+    [key in Post['postID']]: {
+      async: AsyncState;
+      post: Post | null;
+    };
+  };
 };
 
 const generateRandomDate = (): number => new Date().setHours(new Date().getHours() - 2);
 
-const MOCKED_CATEGORIES: { [category in Category]: { [postID: number]: Post } } = {
+const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
+  1: {
+    categories: ['news'] as Category[],
+    date: generateRandomDate(),
+    postID: 1,
+    rating: 74,
+    text:
+      'Service disconnection has been suspended. Lorem ipsum dolor sit amet. Amet sit dolor ipsum lorem? Lorem ipsum dolor sit amet!',
+    title: 'Service disconnection has been suspended',
+    username: 'emily_rose28',
+    imageURL: 'https://via.placeholder.com/350x150',
+    userImageURL: 'https://via.placeholder.com/350x150',
+  },
+  2: {
+    categories: ['news', 'advice'] as Category[],
+    date: generateRandomDate(),
+    postID: 2,
+    rating: 74,
+    text: 'Bli bla blub',
+    title: 'Blub',
+    username: 'emily_rose28',
+    imageURL: 'https://via.placeholder.com/350x150',
+    userImageURL: 'https://via.placeholder.com/350x150',
+  },
+};
+
+const MOCKED_CATEGORIES: { [category in Category]: { [postID in Post['postID']]: Post } } = {
   news: {
-    1: {
-      categories: ['news'],
-      date: generateRandomDate(),
-      postID: 1,
-      rating: 74,
-      text:
-        'Service disconnection has been suspended. Lorem ipsum dolor sit amet. Amet sit dolor ipsum lorem? Lorem ipsum dolor sit amet!',
-      title: 'Service disconnection has been suspended',
-      username: 'emily_rose28',
-      imageURL: 'https://via.placeholder.com/350x150',
-      userImageURL: 'https://via.placeholder.com/350x150',
-    },
+    1: MOCKED_POSTS[1],
+    2: MOCKED_POSTS[2],
   },
   medical_supply: {},
-  advice: {},
+  advice: {
+    2: MOCKED_POSTS[2],
+  },
   grocery: {},
 };
 
 export const loadRequested = createAsyncThunk(`${SLICE_NAME}/loadRequested`, (category: Category) =>
-  Promise.resolve(MOCKED_CATEGORIES[category]),
+  Promise.resolve({ posts: MOCKED_CATEGORIES[category] }),
 );
+
+export const postRequested = createAsyncThunk(`${SLICE_NAME}/postRequested`, (postID: Post['postID']) =>
+  Promise.resolve({ post: MOCKED_POSTS[postID] }),
+);
+
+const initialState: State = {
+  categories: {
+    advice: {
+      async: { error: null, loading: 'idle' },
+      postIDs: null,
+    },
+    grocery: {
+      async: { error: null, loading: 'idle' },
+      postIDs: null,
+    },
+    medical_supply: {
+      async: { error: null, loading: 'idle' },
+      postIDs: null,
+    },
+    news: {
+      async: { error: null, loading: 'idle' },
+      postIDs: null,
+    },
+  },
+  posts: {},
+};
 
 export const slice = createSlice({
   name: SLICE_NAME,
-  initialState: {
-    categories: CATEGORIES.reduce(
-      (acc, category: Category) => ({
-        ...acc,
-        [category]: {
-          async: {
-            error: null,
-            loading: 'idle',
-          },
-          posts: null,
-        },
-      }),
-      {} as Categories,
-    ),
-  } as State,
+  initialState,
   reducers: {},
   extraReducers: {
     [loadRequested.pending.type]: (state, action): void => {
@@ -81,41 +117,111 @@ export const slice = createSlice({
       const category: Category = action.meta.arg;
 
       const async = state.categories[category].async;
-
-      if (async.loading === 'idle') {
-        async.loading = 'pending';
-      }
+      async.loading = 'pending';
     },
-    [loadRequested.fulfilled.type]: (state, action: PayloadAction<{ [postID: number]: Post }>): void => {
+    [loadRequested.fulfilled.type]: (state, action: PayloadAction<{ posts: Posts }>): void => {
       // @ts-ignore
-      const category: Category = action.meta.arg;
+      const categoryArg: Category = action.meta.arg;
+      const category = state.categories[categoryArg];
 
-      const feed = state.categories[category];
-      const async = feed.async;
+      category.async.error = null;
+      category.async.loading = 'idle';
+      category.postIDs = Object.values(action.payload.posts).map((post) => post.postID);
 
-      if (async.loading === 'pending') {
-        async.loading = 'idle';
-        feed.posts = action.payload;
-      }
+      const normalizedPosts = Object.values(action.payload.posts).reduce(
+        (acc, post) => ({
+          ...acc,
+          [post.postID]: {
+            async: {
+              error: null,
+              loading: 'idle',
+            },
+            post,
+          },
+        }),
+        {},
+      );
+
+      Object.assign(state.posts, normalizedPosts);
     },
     [loadRequested.rejected.type]: (state, action: { error: Error }): void => {
       // @ts-ignore
       const category: Category = action.meta.arg;
 
       const async = state.categories[category].async;
+      async.loading = 'idle';
+      async.error = action.error.message;
+    },
+    [postRequested.pending.type]: (state, action): void => {
+      // @ts-ignore
+      const postID: Post['postID'] = action.meta.arg;
 
-      if (async.loading === 'pending') {
-        async.loading = 'idle';
-        async.error = action.error.message;
-      }
+      const post = state.posts[postID] ?? { async: {} };
+      post.async.loading = 'pending';
+      state.posts[postID] = post;
+    },
+    [postRequested.fulfilled.type]: (state, action: PayloadAction<{ post: Post }>): void => {
+      // @ts-ignore
+      const postID: Post['postID'] = action.meta.arg;
+      const post = state.posts[postID];
+
+      post.async.error = null;
+      post.async.loading = 'idle';
+
+      post.post = action.payload.post;
+    },
+    [postRequested.rejected.type]: (state, action: { error: Error }): void => {
+      // @ts-ignore
+      const postID: Post['postID'] = action.meta.arg;
+
+      const post = state.posts[postID] ?? {};
+      post.async = {
+        error: action.error.message,
+        loading: 'idle',
+      };
+      post.post = null;
+      state.posts[postID] = post;
     },
   },
 });
 
-export const selectByCategory = (state: RootState, category: Category): State['categories'][Category] =>
+export const selectPostByID = (state: RootState, postID: number): State['posts'][Post['postID']] | null =>
   createSelector(
-    (state: RootState) => state.feed.categories,
-    (categories) => categories[category],
+    (state: RootState) => state.feed.posts[postID] ?? null,
+    (post) => post,
+  )(state);
+
+export const selectPostsByCategory = (
+  state: RootState,
+  category: Category,
+): {
+  async: AsyncState;
+  posts: Posts | null;
+} =>
+  createSelector(
+    (state: RootState) => {
+      const postIDs = state.feed.categories[category].postIDs;
+
+      const posts =
+        postIDs === null
+          ? null
+          : Object.values(state.feed.posts).reduce((posts: Posts, { post }) => {
+              if (post === null || !postIDs.includes(post.postID)) {
+                return posts;
+              }
+
+              return {
+                ...posts,
+                [post.postID]: post,
+              };
+            }, {});
+
+      return {
+        async: state.feed.categories[category].async,
+        posts,
+      };
+    },
+    (categoryState) => categoryState,
   )(state);
 
 export const feedReducer = slice.reducer;

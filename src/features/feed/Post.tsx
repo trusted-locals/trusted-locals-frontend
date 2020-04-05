@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { Box, Button, Image, Text, useDisclosure } from '@chakra-ui/core';
+import { useHistory } from 'react-router-dom';
+import { Box, Button, Image, Text } from '@chakra-ui/core';
 
-import { PostDrawer } from './PostDrawer';
 import { Author } from '../../components/Author';
 import { Rating } from '../../components/Rating';
 
@@ -13,21 +13,12 @@ const paddingProps = { padding: 2 };
 
 const BORDER_RADIUS = 8;
 
-export const Post: FC<Props> = (props: Props) => {
-  const { isOpen: drawerIsOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure();
-  const moreButtonRef = React.useRef();
-  const postContainerRef = React.useRef();
-
-  const { date, imageURL, rating, title, userImageURL, username } = props;
+export const Post: FC<Props> = ({ date, imageURL, postID, rating, title, userImageURL, username }: Props) => {
+  const history = useHistory();
 
   return (
     <>
-      <Box
-        boxShadow='0px 8px 12px rgba(42, 52, 61, 0.16078431372549)'
-        borderRadius={BORDER_RADIUS}
-        maxWidth={300}
-        ref={postContainerRef}
-      >
+      <Box boxShadow='0px 8px 12px rgba(42, 52, 61, 0.16078431372549)' borderRadius={BORDER_RADIUS} maxWidth={300}>
         <Box height={128} position='relative'>
           <Text
             {...paddingProps}
@@ -69,13 +60,18 @@ export const Post: FC<Props> = (props: Props) => {
 
         <Box {...paddingProps} alignItems='center' display='flex'>
           <Rating rating={rating} />
-          <Button onClick={onDrawerOpen} ref={moreButtonRef} marginLeft={6} variant='outline' variantColor='blue'>
+          <Button
+            onClick={(): void => {
+              history.push(`/feed/detail/${postID}`);
+            }}
+            marginLeft={6}
+            variant='outline'
+            variantColor='blue'
+          >
             More
           </Button>
         </Box>
       </Box>
-
-      <PostDrawer isOpen={drawerIsOpen} onClose={onDrawerClose} post={props} postContainerRef={postContainerRef} />
     </>
   );
 };

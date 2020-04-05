@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import { Link, Redirect, Route, Switch, useLocation } from 'react-router-dom';
-import { Box, Tab, TabList, TabPanels, Tabs } from '@chakra-ui/core';
+import { Box, Tab, TabList, TabPanels, Tabs, usePrevious } from '@chakra-ui/core';
 import { useWindowWidth } from '@react-hook/window-size';
 
+import { DetailView } from './DetailView';
 import { Feed } from './Feed';
 import { FeedHeader } from './FeedHeader';
 
@@ -38,6 +39,7 @@ const TABS_SIZE_BREAKPOINT_EM = 30;
 
 export const FeedPage: FC = () => {
   const { pathname } = useLocation();
+  const previousPathname = usePrevious(pathname);
 
   // Workaround for showing smaller text on mobile.
   const widthPX = useWindowWidth(0, { leading: true, wait: 250 });
@@ -71,6 +73,10 @@ export const FeedPage: FC = () => {
                 <Feed category={category} />
               </Route>
             ))}
+            <Route
+              path='/feed/detail/:postID'
+              render={(props): JSX.Element => <DetailView {...props} previousPathname={previousPathname} />}
+            ></Route>
             <Redirect from='/' to={NEWS_PATH} />
           </Switch>
         </TabPanels>

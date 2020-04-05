@@ -20,6 +20,7 @@ export const Profile: FC<{}> = () => {
   const ownUsername: string | null = useSelector(selectOwnUsername);
 
   const history = useHistory();
+  // TODO: Refactor
   const userNameParam: string | undefined = history.location.pathname.split('/profile/')[1];
   const isOwnProfile = ownUsername === userNameParam || userNameParam === 'me';
 
