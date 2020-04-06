@@ -69,7 +69,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
     title: 'Toilet paper production ramping up',
     username: 'olivermicke',
     imageURL:
-      'https://d1icd6shlvmxi6.cloudfront.net/gsc/X9IVK7/3c/bd/d1/3cbdd1179713474eabfb78be3cf8629b/images/home_screen/rectangle_u66.svg?token=96914e934d88a61faaecb0930cbabccb579d79c0ed63c8b00eabe4b0e4f98b4b',
+      'https://images.unsplash.com/photo-1583541988180-fdf816b632e6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
     userImageURL: PROFILE_IMAGE_OLIVER_MICKE,
   },
   6: {
@@ -81,7 +81,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
     title: 'Service disconnection has been suspended',
     username: 'emily_rose28',
     imageURL:
-      'https://d1icd6shlvmxi6.cloudfront.net/gsc/X9IVK7/3c/bd/d1/3cbdd1179713474eabfb78be3cf8629b/images/home_screen/rectangle_u40.svg?token=f23c8c9de4fa5bfa0831193450eb20706a9de08b17e27baacb18cabb5cc57713',
+      'https://images.unsplash.com/uploads/141086319550951a179e1/a07e0918?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
     userImageURL: PROFILE_IMAGE_EMILY_ROSE28,
   },
 };
