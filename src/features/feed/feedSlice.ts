@@ -4,6 +4,8 @@ import { RootState } from '../../app/store';
 
 import { MOCKED_CATEGORIES, MOCKED_POSTS } from './mocks';
 
+import { submitted, SubmitBody } from '../submit/submitSlice';
+
 const SLICE_NAME = 'feed';
 
 type AsyncState = {
@@ -86,6 +88,33 @@ export const slice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
+    [submitted.fulfilled.type]: (state, action: any): void => {
+      const body: SubmitBody = action.meta.arg;
+      const post: Post = {
+        categories: body.categories,
+        date: +new Date(),
+        imageURL: body.image,
+        postID: Object.values(state.posts)?.length + 1 ?? 1,
+        rating: null,
+        text: body.text,
+        title: body.title,
+        userImageURL: body.userImageURL,
+        username: body.username || '',
+      };
+
+      state.posts[post.postID] = {
+        async: { error: null, loading: 'idle' },
+        post,
+      };
+      post.categories.forEach((category) => {
+        const c = state.categories[category];
+        if (c.postIDs) {
+          c.postIDs.push(post.postID);
+        } else {
+          c.postIDs = [post.postID];
+        }
+      });
+    },
     [loadRequested.pending.type]: (state, action): void => {
       // @ts-ignore
       const category: Category = action.meta.arg;

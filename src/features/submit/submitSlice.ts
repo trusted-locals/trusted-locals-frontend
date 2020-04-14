@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { fetch } from '../../utils/fetch';
+// import { fetch } from '../../utils/fetch';
 
 import { AppRoutes, history } from '../../app/router';
 import { RootState } from '../../app/store';
+import { Category } from '../feed/feedSlice';
 
 const SLICE_NAME = 'submit';
 
@@ -16,25 +17,22 @@ type State = {
   async: AsyncState;
 };
 
-type SubmitBody = {
+export type SubmitBody = {
+  categories: Category[];
   image: string | null;
   text: string;
   title: string;
+  username: string | null;
+  userImageURL: string | null;
 };
 
 type SubmitSuccess = {
   success: boolean;
 };
 
-export const submitted = createAsyncThunk(`${SLICE_NAME}/submitted`, (body: SubmitBody) =>
-  fetch<SubmitSuccess>('/TODO:Route', {
-    body: JSON.stringify(body),
-    method: 'POST',
-  }).then((data) => {
-    history.push('/feed' as AppRoutes);
-    return data;
-  }),
-);
+export const submitted = createAsyncThunk(`${SLICE_NAME}/submitted`, (_body: SubmitBody) => {
+  history.push('/' as AppRoutes);
+});
 
 export const slice = createSlice({
   name: SLICE_NAME,

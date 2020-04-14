@@ -30,17 +30,19 @@ import { convertWidthToEM } from '../../utils/dom-utils';
 
 import { RootState } from '../../app/store';
 
+import { FALLBACK_IMAGE_URL } from './Post';
+
 const MOBILE_BREAKPOINT_EM = 30;
 
 type Props = {
   previousPathname?: string;
 } & RouteComponentProps<{ postID: string }>;
 
-const CATEGORY_NAMES: { [key in Category]: string } = {
-  advice: 'Advice',
-  grocery: 'Grocery',
-  medical_supply: 'Medical Supply',
+export const CATEGORY_NAMES: { [key in Category]: string } = {
   news: 'News',
+  medical_supply: 'Medical Supply',
+  grocery: 'Grocery',
+  advice: 'Advice',
 };
 
 const CATEGORY_LINKS: { [key in Category]: string } = {
@@ -154,7 +156,7 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
         </DrawerHeader>
 
         <DrawerBody margin='0 auto' maxWidth='1000px' width={['initial', 'initial', 1000]}>
-          {imageURL && <Image alt='post image' maxHeight={150} src={imageURL} />}
+          <Image alt='post image' maxHeight={150} src={imageURL ?? FALLBACK_IMAGE_URL} />
 
           <Box marginTop={6}>
             <Text>{text}</Text>

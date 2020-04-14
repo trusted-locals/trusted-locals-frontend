@@ -14,7 +14,7 @@ const persistConfig = {
   key: 'root',
   storage,
   // TODO: Preliminary
-  blacklist: ['feed', 'profile', 'submit', 'user'],
+  blacklist: ['profile', 'submit', 'user'],
 };
 
 const rootReducer = combineReducers({

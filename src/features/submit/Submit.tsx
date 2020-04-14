@@ -1,10 +1,12 @@
-import React, { FC, FormEvent, useRef, useState } from 'react';
+import React, { FC, FormEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Alert,
   AlertIcon,
   Box,
   Button,
+  Checkbox,
+  CheckboxGroup,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -20,6 +22,9 @@ import { selectOwnProfile } from '../user/userSlice';
 
 import { responsiveBoxProps } from '../../app/styles';
 
+import { Category } from '../feed/feedSlice';
+import { CATEGORY_NAMES } from '../feed/DetailView';
+
 // TODO: Talk with BE.
 const TITLE_MIN_LENGTH = 4;
 const TITLE_MAX_LENGTH = 32;
@@ -32,6 +37,7 @@ const TEXTAREA_PLACEHOLDER = 'Share something with your local community';
 
 const ARIA_TITLE = 'post-title';
 const ARIA_TEXT = 'post-text';
+const ARIA_CATEGORIES = 'post-categories';
 const ARIA_IMAGE = 'post-image';
 const ARIA_IMAGE_HELPER_TEXT = 'post-image-helper-text';
 
@@ -45,9 +51,11 @@ export const Submit: FC<{}> = () => {
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
-  const imageInput = useRef(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [imageURL, setImageURL] = useState('');
 
-  // TODO: Display location
+  const username = ownProfile?.username ?? null;
+  const userImageURL = ownProfile?.imageURL ?? null;
 
   return (
     <Box {...responsiveBoxProps}>
@@ -65,22 +73,36 @@ export const Submit: FC<{}> = () => {
         onSubmit={(e): void => {
           e.preventDefault();
 
+          if (categories.length === 0) {
+            toast({
+              title: 'No category selected',
+              description: 'Please select at least one category.',
+              status: 'error',
+              duration: 7000,
+              isClosable: true,
+            });
+
+            return;
+          }
+
           dispatch(
             submitted({
-              // TODO: Handle image content
-              image: 'todo...',
+              categories,
+              image: imageURL === '' ? null : imageURL,
               text,
               title,
+              userImageURL,
+              username,
             }),
           );
 
           toast({
-            title: "Post couldn't be saved",
-            description: 'This demo does not save submitted posts yet.',
-            status: 'info',
-            duration: 7000,
+            title: 'Post submitted.',
+            status: 'success',
+            duration: 4000,
             isClosable: true,
           });
+          // TODO: Redirect
         }}
       >
         <FormControl marginTop={8}>
@@ -114,8 +136,32 @@ export const Submit: FC<{}> = () => {
           />
         </FormControl>
         <FormControl marginTop={8}>
+          <FormLabel htmlFor={ARIA_CATEGORIES}>Categories</FormLabel>
+          <CheckboxGroup
+            // @ts-ignore
+            onChange={(nextCategories: Category[]): void => {
+              setCategories(nextCategories);
+            }}
+            value={categories}
+          >
+            {Object.entries(CATEGORY_NAMES).map(([category, categoryName]) => (
+              <Checkbox key={category} value={category}>
+                {categoryName}
+              </Checkbox>
+            ))}
+          </CheckboxGroup>
+        </FormControl>
+        <FormControl marginTop={8}>
           <FormLabel htmlFor={ARIA_IMAGE}>Image</FormLabel>
-          <Input accept='image/png, image/jpeg' id={ARIA_IMAGE} marginTop={2} ref={imageInput} type='file' />
+          <Input
+            marginTop={2}
+            onChange={(e: FormEvent<HTMLInputElement>): void => {
+              setImageURL((e.target as HTMLInputElement).value);
+            }}
+            placeholder='Attach a URL of an image here'
+            type='text'
+            value={imageURL}
+          />
           <FormHelperText id={ARIA_IMAGE_HELPER_TEXT}>Providing an image is optional.</FormHelperText>
         </FormControl>
         <Button isLoading={loading === 'pending'} marginTop={10} type='submit' variantColor='blue'>

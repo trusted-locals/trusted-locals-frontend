@@ -16,6 +16,9 @@ const paddingProps = { padding: 2 };
 
 const BORDER_RADIUS = 8;
 
+export const FALLBACK_IMAGE_URL =
+  'https://images.unsplash.com/photo-1584118624012-df056829fbd0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=60';
+
 export const Post: FC<Props> = ({
   date,
   detailViewRedirectToProfile,
@@ -54,19 +57,17 @@ export const Post: FC<Props> = ({
               {title}
             </PseudoBox>
 
-            {imageURL && (
-              <Image
-                alt='post background image'
-                // @ts-ignore
-                borderTopLeftRadius={BORDER_RADIUS}
-                // @ts-ignore
-                borderTopRightRadius={BORDER_RADIUS}
-                height='100%'
-                objectFit='cover'
-                src={imageURL}
-                width='100%'
-              />
-            )}
+            <Image
+              alt='post background image'
+              // @ts-ignore
+              borderTopLeftRadius={BORDER_RADIUS}
+              // @ts-ignore
+              borderTopRightRadius={BORDER_RADIUS}
+              height='100%'
+              objectFit='cover'
+              src={imageURL ?? FALLBACK_IMAGE_URL}
+              width='100%'
+            />
           </Box>
         </Link>
 
