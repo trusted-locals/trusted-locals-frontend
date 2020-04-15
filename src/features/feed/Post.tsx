@@ -83,7 +83,7 @@ export const Post: FC<Props> = ({
             variant='outline'
             variantColor='blue'
           >
-            More
+            Verify
           </Button>
         </Box>
       </Box>
