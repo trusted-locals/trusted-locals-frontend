@@ -39,6 +39,8 @@ export const Feed: FC<Props> = ({ category }: Props) => {
     return <>TODO: Empty state</>;
   }
 
+  const postsSortedByDate = Object.values(posts).sort((postA, postB) => (postA.date > postB.date ? -1 : 1));
+
   return (
     <Box
       display='grid'
@@ -46,7 +48,7 @@ export const Feed: FC<Props> = ({ category }: Props) => {
       gridGap={8}
       marginTop={8}
     >
-      {Object.values(posts).map((post: PostType) => (
+      {postsSortedByDate.map((post: PostType) => (
         <Post key={post.postID} {...post} />
       ))}
     </Box>
