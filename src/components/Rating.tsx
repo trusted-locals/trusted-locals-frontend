@@ -39,7 +39,6 @@ export const Rating: FC<Props> = ({ boxProps, labelProps, rating, shouldShowDesc
     <CircularProgress
       aria-label='reliability score of post'
       color={color}
-      role='presentation'
       style={boxProps}
       trackColor={color}
       value={rating ?? 100}

@@ -1,7 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, RouteComponentProps, useHistory } from 'react-router-dom';
-import { useWindowWidth } from '@react-hook/window-size';
 import {
   Box,
   Button,
@@ -13,12 +12,14 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Image,
+  Input,
   Link as ChakraLink,
   Tag,
   Text,
   useToast,
 } from '@chakra-ui/core';
 
+import { Comment } from './Comment';
 import { PostInfo } from './PostInfo';
 
 import { Rating } from '../../components/Rating';
@@ -26,13 +27,9 @@ import { Rating } from '../../components/Rating';
 import { Category, postRequested, selectPostByID } from './feedSlice';
 import { selectOwnProfile } from '../user/userSlice';
 
-import { convertWidthToEM } from '../../utils/dom-utils';
-
 import { RootState } from '../../app/store';
 
 import { FALLBACK_IMAGE_URL } from './Post';
-
-const MOBILE_BREAKPOINT_EM = 30;
 
 type Props = {
   previousPathname?: string;
@@ -59,7 +56,6 @@ const isIOS =
   (/iPad|iPhone|iPod/.test(navigator.platform) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
   !window.MSStream;
-const deviceSpecificProps = isIOS ? { marginTop: 24 } : {};
 
 export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
   const dispatch = useDispatch();
@@ -67,16 +63,7 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
   const history = useHistory();
 
   const toast = useToast();
-
   const ownProfile = useSelector(selectOwnProfile).profile ?? null;
-
-  // Workaround for hidden header on mobile devices
-  const widthPX = useWindowWidth(0, {
-    leading: true,
-    wait: 250,
-  });
-  const widthEM = convertWidthToEM(widthPX);
-  const isFullHeight = widthEM <= MOBILE_BREAKPOINT_EM;
 
   const postID: string | null = match.params.postID ?? null;
 
@@ -96,12 +83,47 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
     return <>TODO: Null state</>;
   }
 
-  const { categories, date, imageURL, rating, text, title, userImageURL, username } = post.post;
+  const { categories, comments, date, imageURL, rating, text, title, userImageURL, username } = post.post;
 
   const onClose = (): void => {
     const nextPath = previousPathname ?? '/';
     history.push(nextPath);
   };
+
+  const onComment = (): void => {
+    toast({
+      title: 'Comment not submitted',
+      description: 'Submitting commments is not yet supported in this demo.',
+      status: 'info',
+      duration: 7000,
+      isClosable: true,
+    });
+  };
+
+  const footerContent = (
+    <>
+      <Button
+        onClick={(): void => {
+          onVote();
+          onClose();
+        }}
+        variant='ghost'
+        variantColor='blue'
+      >
+        Disconfirm
+      </Button>
+      <Button
+        marginLeft={4}
+        onClick={(): void => {
+          onVote();
+          onClose();
+        }}
+        variantColor='blue'
+      >
+        Confirm
+      </Button>
+    </>
+  );
 
   const onVote = (): void => {
     toast({
@@ -116,92 +138,122 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
   };
 
   return (
-    <Drawer scrollBehavior='inside' isFullHeight={isFullHeight} isOpen onClose={onClose} placement='bottom'>
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton {...deviceSpecificProps} aria-label='return to feed' />
-        <DrawerHeader
-          margin={['inherit', 'inherit', '0 auto']}
-          width={['initial', 'initial', 1000]}
-          {...deviceSpecificProps}
-        >
-          <Text as='h2'>{title}</Text>
+    <>
+      <Drawer onClose={onClose} isFullHeight scrollBehavior='inside' placement='top' isOpen>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton aria-label='return to feed' />
+          <DrawerHeader margin={['inherit', 'inherit', '0 auto']} width={['initial', 'initial', 1000]}>
+            <Text as='h2'>{title}</Text>
 
-          <Box
-            marginTop={2}
-            onClick={(event): void => {
-              // Prevent Drawer#onClose from being called so history#push isn't called.
-              event.stopPropagation();
-            }}
-          >
-            {categories.map((category: Category) => (
-              <Link as={RouterLink} key={category} to={CATEGORY_LINKS[category]}>
-                <Tag marginRight={2} size='sm'>
-                  {CATEGORY_NAMES[category]}
-                </Tag>
-              </Link>
-            ))}
-          </Box>
-
-          <div
-            // eslint-disable-next-line
-            onClick={(event): void => {
-              // Prevent Drawer#onClose from being called so history#push isn't called.
-              event.stopPropagation();
-            }}
-            role='presentation'
-          >
-            <PostInfo date={date} style={{ marginTop: 4 }} userImageURL={userImageURL} username={username} />
-          </div>
-        </DrawerHeader>
-
-        <DrawerBody margin='0 auto' maxWidth='1000px' width={['initial', 'initial', 1000]}>
-          <Image alt='post image' maxHeight={150} src={imageURL ?? FALLBACK_IMAGE_URL} />
-
-          <Box marginTop={6}>
-            <Text>{text}</Text>
-          </Box>
-
-          <Box display='flex' marginTop={[4, 8, 12]}>
-            <Rating
-              boxProps={{
-                height: '100%',
-                width: '100%',
-                maxWidth: 70,
-                maxHeight: 70,
+            <Box
+              marginTop={2}
+              onClick={(event): void => {
+                // Prevent Drawer#onClose from being called so history#push isn't called.
+                event.stopPropagation();
               }}
-              labelProps={{
-                fontSize: '16px',
-              }}
-              rating={rating}
-              shouldShowDescription
-            />
-          </Box>
-        </DrawerBody>
+            >
+              {categories.map((category: Category) => (
+                <Link as={RouterLink} key={category} to={CATEGORY_LINKS[category]}>
+                  <Tag marginRight={2} size='sm'>
+                    {CATEGORY_NAMES[category]}
+                  </Tag>
+                </Link>
+              ))}
+            </Box>
 
-        <DrawerFooter maxWidth='1000px' width={['initial', 'initial', 1000]} margin={['initial', 'initial', '0 auto']}>
-          <Button
-            onClick={(): void => {
-              onVote();
-              onClose();
-            }}
-            variant='ghost'
-            variantColor='blue'
+            <div
+              // eslint-disable-next-line
+              onClick={(event): void => {
+                // Prevent Drawer#onClose from being called so history#push isn't called.
+                event.stopPropagation();
+              }}
+              role='presentation'
+            >
+              <PostInfo date={date} style={{ marginTop: 4 }} userImageURL={userImageURL} username={username} />
+            </div>
+          </DrawerHeader>
+
+          <DrawerBody margin='0 auto' maxWidth='1000px' width={['initial', 'initial', 1000]}>
+            <Image alt='post image' maxHeight={150} src={imageURL ?? FALLBACK_IMAGE_URL} />
+            <Box marginTop={8}>
+              <Text>{text}</Text>
+            </Box>
+            <Box display='flex' marginTop={[8, 8, 10]}>
+              <Rating
+                boxProps={{
+                  height: '100%',
+                  width: '100%',
+                  maxWidth: 70,
+                  maxHeight: 70,
+                }}
+                labelProps={{
+                  fontSize: '16px',
+                }}
+                rating={rating}
+                shouldShowDescription
+              />
+            </Box>
+            <Box marginTop={[8, 8, 10]}>
+              <Text as='h3' color='gray.700' fontWeight='semibold' marginBottom={1}>
+                Comments
+              </Text>
+              <div
+                // eslint-disable-next-line
+                onClick={(event): void => {
+                  // Prevent Drawer#onClose from being called so history#push isn't called.
+                  event.stopPropagation();
+                }}
+                role='presentation'
+              >
+                <Box marginTop={4}>
+                  {comments.length > 0 ? (
+                    comments
+                      .slice()
+                      .sort((commentA, commentB) => (commentA.date > commentB.date ? -1 : 1))
+                      .map((comment) => <Comment key={comment.commentID} {...comment} />)
+                  ) : (
+                    <Text fontSize='sm'>No comments</Text>
+                  )}
+                </Box>
+                <Box display='flex' marginTop={4}>
+                  <Box marginRight={4} width={['80%', '80%', '40%']}>
+                    <Input
+                      aria-label='comment on this post'
+                      variant='flushed'
+                      rounded={4}
+                      placeholder='Share with your neighbors'
+                      size='sm'
+                    />
+                  </Box>
+                  <Button
+                    onClick={() => {
+                      onComment();
+                    }}
+                    size='sm'
+                    variant='ghost'
+                  >
+                    Comment
+                  </Button>
+                </Box>
+              </div>
+            </Box>
+            {isIOS && (
+              <Box display='flex' justifyContent='flex-end' marginTop={8} marginBottom={16}>
+                {footerContent}
+              </Box>
+            )}
+          </DrawerBody>
+
+          <DrawerFooter
+            maxWidth='1000px'
+            width={['initial', 'initial', 1000]}
+            margin={['initial', 'initial', '0 auto']}
           >
-            Disconfirm
-          </Button>
-          <Button
-            marginLeft={4}
-            onClick={(): void => {
-              onVote();
-              onClose();
-            }}
-            variantColor='blue'
-          >
-            Confirm
-          </Button>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+            {!isIOS && footerContent}
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };

@@ -27,12 +27,12 @@ jobs:
         uses: foo-software/lighthouse-check-action@master
         id: lighthouseCheck
         with:
-          urls: 'https://trusted-locals.github.io/#/feed/news,https://trusted-locals.github.io/#/submit,https://trusted-locals.github.io/#/profile/me'
+          urls: 'https://trusted-locals.github.io/#/feed/news,https://trusted-locals.github.io/#/feed/detail/1,https://trusted-locals.github.io/#/submit,https://trusted-locals.github.io/#/profile/me'
       - name: Handle Lighthouse Check results
         uses: foo-software/lighthouse-check-status-action@master
         with:
           lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
-          minAccessibilityScore: '80'
+          minAccessibilityScore: '90'
           minBestPracticesScore: '80'
           minPerformanceScore: '80'
           # Preliminary

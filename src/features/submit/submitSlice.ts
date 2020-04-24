@@ -1,10 +1,8 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// import { fetch } from '../../utils/fetch';
-
 import { AppRoutes, history } from '../../app/router';
 import { RootState } from '../../app/store';
-import { Category } from '../feed/feedSlice';
+import { Category, Comment } from '../feed/feedSlice';
 
 const SLICE_NAME = 'submit';
 
@@ -19,6 +17,7 @@ type State = {
 
 export type SubmitBody = {
   categories: Category[];
+  comments: Comment[];
   image: string | null;
   text: string;
   title: string;

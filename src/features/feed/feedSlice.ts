@@ -14,6 +14,13 @@ type AsyncState = {
 };
 
 export type Category = 'news' | 'medical_supply' | 'grocery' | 'advice';
+export type Comment = {
+  comment: string;
+  commentID: number;
+  date: number;
+  userImageURL: string | null;
+  username: string;
+};
 
 export type Post = {
   postID: number;
@@ -25,6 +32,7 @@ export type Post = {
   title: string;
   userImageURL: string | null;
   username: string;
+  comments: Comment[];
 };
 
 export type Posts = { [key in Post['postID']]: Post };
@@ -92,6 +100,7 @@ export const slice = createSlice({
       const body: SubmitBody = action.meta.arg;
       const post: Post = {
         categories: body.categories,
+        comments: body.comments,
         date: +new Date(),
         imageURL: body.image,
         postID: Object.values(state.posts)?.length + 1 ?? 1,

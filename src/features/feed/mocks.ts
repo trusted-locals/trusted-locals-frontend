@@ -8,18 +8,21 @@ export const PROFILE_IMAGE_EMILY_ROSE28 =
 const generateRandomDate = (start = new Date(Date.now() - 100000000), end = new Date()): number =>
   +new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 
+const generateRandomCommentDate = (): number => generateRandomDate(new Date(Date.now() - 1000000));
+
 export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
   1: {
     categories: ['news'] as Category[],
     date: generateRandomDate(),
     postID: 1,
     rating: 23,
-    text: 'Lorem ipsum dolor sit amet.',
+    text: 'VCU Developed CODVID-19 test',
     title: 'VCU Developed CODVID-19 test',
     username: 'olivermicke',
     imageURL:
       'https://images.unsplash.com/photo-1511174511562-5f7f18b874f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
     userImageURL: PROFILE_IMAGE_OLIVER_MICKE,
+    comments: [],
   },
   2: {
     categories: ['grocery'] as Category[],
@@ -33,9 +36,27 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
     imageURL:
       'https://images.unsplash.com/photo-1584556812952-905ffd0c611a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
     userImageURL: PROFILE_IMAGE_EMILY_ROSE28,
+    comments: [
+      {
+        comment: 'do you know when can the next delivery be expected?',
+        commentID: 104,
+        date: generateRandomCommentDate(),
+        userImageURL: PROFILE_IMAGE_OLIVER_MICKE,
+        username: 'olivermicke',
+      },
+    ],
   },
   3: {
     categories: ['news', 'medical_supply'] as Category[],
+    comments: [
+      {
+        comment: 'Only one box left when I was there at 11',
+        commentID: 101,
+        date: generateRandomCommentDate(),
+        userImageURL: PROFILE_IMAGE_EMILY_ROSE28,
+        username: 'emily_rose28',
+      },
+    ],
     date: generateRandomDate(),
     postID: 3,
     rating: 74,
@@ -58,6 +79,15 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
     imageURL:
       'https://images.unsplash.com/photo-1582795003154-35736cf26353?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
     userImageURL: PROFILE_IMAGE_OLIVER_MICKE,
+    comments: [
+      {
+        comment: "In case you don't have masks yet, home depot in henrico has got some available",
+        commentID: 102,
+        date: generateRandomCommentDate(),
+        userImageURL: PROFILE_IMAGE_EMILY_ROSE28,
+        username: 'emily_rose28',
+      },
+    ],
   },
   5: {
     categories: ['news', 'grocery'] as Category[],
@@ -71,9 +101,19 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
     imageURL:
       'https://images.unsplash.com/photo-1583541988180-fdf816b632e6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
     userImageURL: PROFILE_IMAGE_OLIVER_MICKE,
+    comments: [
+      {
+        comment: "That's great to hear because I work at Target at broad street and we are running out of supplies",
+        commentID: 106,
+        date: generateRandomCommentDate(),
+        userImageURL: PROFILE_IMAGE_EMILY_ROSE28,
+        username: 'emily_rose28',
+      },
+    ],
   },
   6: {
     categories: ['news'] as Category[],
+    comments: [],
     date: generateRandomDate(),
     postID: 6,
     rating: 84,

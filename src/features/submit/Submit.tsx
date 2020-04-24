@@ -88,6 +88,7 @@ export const Submit: FC<{}> = () => {
           dispatch(
             submitted({
               categories,
+              comments: [],
               image: imageURL === '' ? null : imageURL,
               text,
               title,
@@ -154,6 +155,7 @@ export const Submit: FC<{}> = () => {
         <FormControl marginTop={8}>
           <FormLabel htmlFor={ARIA_IMAGE}>Image</FormLabel>
           <Input
+            id={ARIA_IMAGE}
             marginTop={2}
             onChange={(e: FormEvent<HTMLInputElement>): void => {
               setImageURL((e.target as HTMLInputElement).value);

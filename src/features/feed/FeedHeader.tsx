@@ -87,6 +87,8 @@ export const FeedHeader: FC<Props> = (_props: Props) => {
           <Icon color='gray.400' name='search' />
         </InputLeftElement>
         <Input
+          aria-label='feed search'
+          id='feed-search'
           fontSize={['xs', 'sm', 'md']}
           maxWidth={400}
           onFocus={(): void => {
