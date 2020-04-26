@@ -25,11 +25,9 @@ import { responsiveBoxProps } from '../../app/styles';
 import { Category } from '../feed/feedSlice';
 import { CATEGORY_NAMES } from '../feed/DetailView';
 
-// TODO: Talk with BE.
 const TITLE_MIN_LENGTH = 4;
 const TITLE_MAX_LENGTH = 32;
 
-// TODO: Talk with BE.
 const TEXT_MIN_LENGTH = 4;
 const TEXT_MAX_LENGTH = 65536;
 

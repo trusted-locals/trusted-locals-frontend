@@ -227,7 +227,7 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
                     />
                   </Box>
                   <Button
-                    onClick={() => {
+                    onClick={(): void => {
                       onComment();
                     }}
                     size='sm'
