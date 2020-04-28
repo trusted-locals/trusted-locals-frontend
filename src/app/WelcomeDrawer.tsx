@@ -40,7 +40,7 @@ export const WelcomeDrawer: FC<{}> = () => {
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader margin={['inherit', 'inherit', '0 auto']} maxWidth={500}>
-          <Image src={LOGO_PATH} />
+          <Image alt='logo of trusted locals' src={LOGO_PATH} />
         </DrawerHeader>
 
         <DrawerBody margin='0 auto' maxWidth={500}>
