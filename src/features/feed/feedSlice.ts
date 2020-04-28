@@ -47,6 +47,7 @@ type State = {
       post: Post | null;
     };
   };
+  searchValue: string;
 };
 
 export const loadRequested = createAsyncThunk(`${SLICE_NAME}/loadRequested`, (category: Category) =>
@@ -89,12 +90,17 @@ const initialState: State = {
     },
   },
   posts: {},
+  searchValue: '',
 };
 
 export const slice = createSlice({
   name: SLICE_NAME,
   initialState,
-  reducers: {},
+  reducers: {
+    changedSearchValue: (state, action: PayloadAction<{ searchValue: State['searchValue'] }>): void => {
+      state.searchValue = action.payload.searchValue;
+    },
+  },
   extraReducers: {
     [submitted.fulfilled.type]: (state, action: any): void => {
       const body: SubmitBody = action.meta.arg;
@@ -275,4 +281,12 @@ export const selectPostsByCategory = (
     (categoryState) => categoryState,
   )(state);
 
+export const selectSearchValue = (state: RootState): State['searchValue'] =>
+  createSelector(
+    (state: RootState) => state.feed.searchValue,
+    (searchValue) => searchValue,
+  )(state);
+
 export const feedReducer = slice.reducer;
+
+export const { changedSearchValue } = slice.actions;

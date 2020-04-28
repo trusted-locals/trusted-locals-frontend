@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
@@ -16,9 +16,9 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useToast,
 } from '@chakra-ui/core';
 
+import { changedSearchValue } from './feedSlice';
 import { selectOwnProfile } from '../user/userSlice';
 
 import { responsiveBoxProps } from '../../app/styles';
@@ -44,14 +44,13 @@ const Location: FC<{}> = () => {
 };
 
 export const FeedHeader: FC<Props> = (_props: Props) => {
+  const dispatch = useDispatch();
   const profile = useSelector(selectOwnProfile).profile ?? null;
 
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const onModalClose = (): void => {
     setModalIsOpen(false);
   };
-
-  const toast = useToast();
 
   if (!profile) {
     return (
@@ -91,14 +90,10 @@ export const FeedHeader: FC<Props> = (_props: Props) => {
           id='feed-search'
           fontSize={['xs', 'sm', 'md']}
           maxWidth={400}
-          onFocus={(): void => {
-            toast({
-              title: 'Not yet implemented',
-              description: 'This demo does not support searching posts yet.',
-              status: 'info',
-              duration: 7000,
-              isClosable: true,
-            });
+          // @ts-ignore
+          onChange={({ target }): void => {
+            const searchValue = target.value.toLowerCase();
+            dispatch(changedSearchValue({ searchValue }));
           }}
           placeholder={INPUT_PLACEHOLDER}
           type='text'

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@chakra-ui/core';
 
 import { Post } from './Post';
-import { Category, loadRequested, Post as PostType, selectPostsByCategory } from './feedSlice';
+import { Category, loadRequested, Post as PostType, selectPostsByCategory, selectSearchValue } from './feedSlice';
 
 import { RootState } from '../../app/store';
 
@@ -11,9 +11,18 @@ type Props = {
   category: Category;
 };
 
+const filteredPosts = (posts: PostType[], searchValue: string): PostType[] =>
+  posts.filter((post) => post.title.toLowerCase().includes(searchValue));
+
+const sortedPosts = (posts: PostType[]): PostType[] => posts.sort((postA, postB) => (postA.date > postB.date ? -1 : 1));
+
+const filteredAndSortedPosts = (posts: PostType[], searchValue: string): PostType[] =>
+  sortedPosts(filteredPosts(posts, searchValue));
+
 export const Feed: FC<Props> = ({ category }: Props) => {
   const dispatch = useDispatch();
   const { async, posts } = useSelector((state: RootState) => selectPostsByCategory(state, category));
+  const searchValue = useSelector(selectSearchValue);
 
   useEffect(() => {
     if (async.error === null && posts === null) {
@@ -39,8 +48,6 @@ export const Feed: FC<Props> = ({ category }: Props) => {
     return <>TODO: Empty state</>;
   }
 
-  const postsSortedByDate = Object.values(posts).sort((postA, postB) => (postA.date > postB.date ? -1 : 1));
-
   return (
     <Box
       display='grid'
@@ -48,7 +55,7 @@ export const Feed: FC<Props> = ({ category }: Props) => {
       gridGap={8}
       marginTop={8}
     >
-      {postsSortedByDate.map((post: PostType) => (
+      {filteredAndSortedPosts(Object.values(posts), searchValue).map((post: PostType) => (
         <Post key={post.postID} {...post} />
       ))}
     </Box>

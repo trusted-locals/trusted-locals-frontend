@@ -16,8 +16,8 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
     date: generateRandomDate(),
     postID: 1,
     rating: 23,
-    text: 'VCU Developed CODVID-19 test',
-    title: 'VCU Developed CODVID-19 test',
+    text: 'VCU Developed COVID-19 test',
+    title: 'VCU Developed COVID-19 test',
     username: 'olivermicke',
     imageURL:
       'https://images.unsplash.com/photo-1511174511562-5f7f18b874f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
