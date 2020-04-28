@@ -30,7 +30,7 @@ const buttonContainerProps: BoxProps = {
 const buttonProps: Partial<ButtonProps> = {
   as: Link,
   marginTop: 4,
-  variantColor: 'blue',
+  variantColor: 'green',
 };
 
 export const Account: FC<{}> = () => (

@@ -164,7 +164,7 @@ export const Submit: FC<{}> = () => {
           />
           <FormHelperText id={ARIA_IMAGE_HELPER_TEXT}>Providing an image is optional.</FormHelperText>
         </FormControl>
-        <Button isLoading={loading === 'pending'} marginTop={10} type='submit' variantColor='blue'>
+        <Button isLoading={loading === 'pending'} marginTop={10} type='submit' variantColor='green'>
           Submit
         </Button>
       </form>

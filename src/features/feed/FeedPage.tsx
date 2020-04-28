@@ -51,7 +51,7 @@ export const FeedPage: FC = () => {
   return (
     <Box marginTop={2}>
       <FeedHeader />
-      <Tabs marginTop={[6, 6, 8]} size={tabsSize}>
+      <Tabs marginTop={[6, 6, 8]} size={tabsSize} variantColor='green'>
         <TabList id={ARIA_TABS} {...responsiveBoxProps} width={['100%', '100%', '90%', '80%', '70%']}>
           {tabs.map(({ id, name, to }) => (
             <Tab

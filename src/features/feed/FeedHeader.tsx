@@ -58,7 +58,7 @@ export const FeedHeader: FC<Props> = (_props: Props) => {
       <Box {...responsiveBoxProps}>
         <p>Sign in to vote and contribute.</p>
         <RouterLink to={'/account/login' as AppRoutes}>
-          <Button marginTop={4} size='sm' variantColor='blue'>
+          <Button marginTop={4} size='sm' variantColor='green'>
             Sign in
           </Button>
         </RouterLink>
@@ -123,7 +123,7 @@ export const FeedHeader: FC<Props> = (_props: Props) => {
               onClick={(): void => {
                 setModalIsOpen(false);
               }}
-              variantColor='blue'
+              variantColor='green'
             >
               OK
             </Button>

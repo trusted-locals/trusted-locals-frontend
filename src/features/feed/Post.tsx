@@ -81,7 +81,7 @@ export const Post: FC<Props> = ({
             // @ts-ignore
             to={linkToDetailView}
             variant='outline'
-            variantColor='blue'
+            variantColor='green'
           >
             Verify
           </Button>

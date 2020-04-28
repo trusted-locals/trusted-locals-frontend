@@ -82,7 +82,7 @@ const PureRegistration: FC<{}> = () => {
             setIsPasswordVisible={setIsPasswordVisible}
             setPassword={setPassword}
           />
-          <Button isLoading={loading === 'pending'} marginTop={6} type='submit' variantColor='blue'>
+          <Button isLoading={loading === 'pending'} marginTop={6} type='submit' variantColor='green'>
             Register
           </Button>
         </form>
@@ -96,7 +96,7 @@ const PureRegistration: FC<{}> = () => {
       <Box marginTop={12}>
         Already have an account?{' '}
         <RouterLink to={'/account/login' as AppRoutes}>
-          <Link as='span' color='blue.500' fontWeight='semibold'>
+          <Link as='span' color='green.500' fontWeight='semibold'>
             Login here.
           </Link>
         </RouterLink>

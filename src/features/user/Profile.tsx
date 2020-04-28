@@ -90,7 +90,7 @@ export const Profile: FC<{}> = () => {
               dispatch(loggedOut());
             }}
             variant='ghost'
-            variantColor='blue'
+            variantColor='green'
           >
             Log out
           </Button>

@@ -61,7 +61,7 @@ export const Login: FC<{}> = () => {
             setPassword={setPassword}
           />
           <Box display='flex' justifyContent='space-between' marginTop={6}>
-            <Button isLoading={loading === 'pending'} type='submit' variantColor='blue'>
+            <Button isLoading={loading === 'pending'} type='submit' variantColor='green'>
               Login
             </Button>
             <Link alignItems='center' as='span' display='flex'>
@@ -83,7 +83,7 @@ export const Login: FC<{}> = () => {
       <Box marginTop={12}>
         Don&apos;t have an account yet?{' '}
         <RouterLink to={'/account/register' as AppRoutes}>
-          <Link as='span' color='blue.500' fontWeight='semibold'>
+          <Link as='span' color='green.500' fontWeight='semibold'>
             Create one here.
           </Link>
         </RouterLink>

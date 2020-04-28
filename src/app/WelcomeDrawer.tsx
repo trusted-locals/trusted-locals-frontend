@@ -4,15 +4,17 @@ import {
   Button,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Heading,
+  Image,
   Text,
 } from '@chakra-ui/core';
 
 const DID_SEE_WELCOME_DRAWER_KEY = 'did-see-welcome-drawer-02';
+const LOGO_PATH = process.env.PUBLIC_URL + '/logos/logo-transparent.png';
 
 export const WelcomeDrawer: FC<{}> = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -38,35 +40,29 @@ export const WelcomeDrawer: FC<{}> = () => {
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader margin={['inherit', 'inherit', '0 auto']} maxWidth={500}>
-          Welcome to Trusted Locals!
+          <Image src={LOGO_PATH} />
         </DrawerHeader>
 
         <DrawerBody margin='0 auto' maxWidth={500}>
-          <Button onClick={onClose} padding={0} variant='ghost' variantColor='blue'>
-            Show the demo
-          </Button>
-          <Text marginTop={8} fontSize={16} fontWeight='semibold'>
+          <Heading as='h3' marginTop={8} size='md'>
             About
-          </Text>
+          </Heading>
           <Text>
             We believe people are best served through their local communities. By crowdsourcing information related to
             your community in an organized and audited way that are visible to everyone, it can build up trust and
             empower people to take actions with confidence.
           </Text>
-          <Text marginTop={8} fontSize={16} fontWeight='semibold'>
+          <Heading as='h3' marginTop={8} size='md'>
             Disclaimer
-          </Text>
+          </Heading>
           <Text>
             In this demo, you will be logged in with the profile of one of our developers. None of your votes or created
             posts will be saved. The posts you see are made up, and should not be taken seriously.
           </Text>
-        </DrawerBody>
-
-        <DrawerFooter margin={['inherit', 'inherit', '0 auto']} maxWidth={500}>
-          <Button onClick={onClose} variantColor='blue'>
+          <Button marginTop={16} onClick={onClose} variantColor='green'>
             Show the demo
           </Button>
-        </DrawerFooter>
+        </DrawerBody>
       </DrawerContent>
     </Drawer>
   );

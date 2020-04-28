@@ -108,7 +108,7 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
           onClose();
         }}
         variant='ghost'
-        variantColor='blue'
+        variantColor='green'
       >
         Disconfirm
       </Button>
@@ -118,7 +118,7 @@ export const DetailView: FC<Props> = ({ match, previousPathname }: Props) => {
           onVote();
           onClose();
         }}
-        variantColor='blue'
+        variantColor='green'
       >
         Confirm
       </Button>
