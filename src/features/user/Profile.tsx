@@ -41,7 +41,7 @@ export const Profile: FC<{}> = () => {
     if (!profile) {
       dispatch(openedOtherProfile({ username: userNameParam }));
     }
-  }, [profile]);
+  }, [dispatch, profile, userNameParam]);
 
   if (!profile) {
     // TODO: Fetch profile.
