@@ -241,12 +241,14 @@ const thunks = {
         .then(({ profile }) => {
           dispatch(requestedPostsByIDs(profile.postIDs));
 
-          dispatch({
-            type: OPENED_OWN_PROFILE_FULFILLED,
-            payload: {
-              profile,
-            },
-          });
+          if (isOwnProfile) {
+            dispatch({
+              type: OPENED_OWN_PROFILE_FULFILLED,
+              payload: {
+                profile,
+              },
+            });
+          }
         })
         .catch((error: Error) => {
           dispatch({ error, type: OPENED_OWN_PROFILE_REJECTED });
