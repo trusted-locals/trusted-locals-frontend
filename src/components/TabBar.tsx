@@ -1,4 +1,4 @@
-import React, { FC, lazy } from 'react';
+import React, { ComponentType, FC, lazy } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, Switch, useLocation } from 'react-router-dom';
 import { Box } from '@chakra-ui/core';
@@ -6,52 +6,71 @@ import { Box } from '@chakra-ui/core';
 import { AppRoute, UserState } from '../app/AppRoute';
 import { FeedPage } from '../features/feed/FeedPage';
 import { TabBarButton } from './TabBarButton';
+import { PageError } from './PageError';
 
 import { selectIsLoggedIn } from '../features/user/userSlice';
 
 import { AppRoutes } from '../app/router';
 import { ThemeType } from '../app/styles';
 
+const catchPageError = (): { default: ComponentType<any> } => ({ default: PageError });
+
+// Unfortunately, all components have to be lazy-loaded like this.
+// https://stackoverflow.com/questions/53059420/dynamic-path-import-for-lazy-loading-of-components-using-react-loadable/53060299#53060299
 const Submit = lazy(() =>
-  import('../features/submit/Submit').then(({ Submit }) => ({
-    default: Submit,
-  })),
+  import('../features/submit/Submit')
+    .then(({ Submit }) => ({
+      default: Submit,
+    }))
+    .catch(catchPageError),
 );
 
 const Profile = lazy(() =>
-  import('../features/user/Profile').then(({ Profile }) => ({
-    default: Profile,
-  })),
+  import('../features/user/Profile')
+    .then(({ Profile }) => ({
+      default: Profile,
+    }))
+    .catch(catchPageError),
 );
 
 const Account = lazy(() =>
-  import('../features/user/Account').then(({ Account }) => ({
-    default: Account,
-  })),
+  import('../features/user/Account')
+    .then(({ Account }) => ({
+      default: Account,
+    }))
+    .catch(catchPageError),
 );
 
 const Login = lazy(() =>
-  import('../features/user/Login').then(({ Login }) => ({
-    default: Login,
-  })),
+  import('../features/user/Login')
+    .then(({ Login }) => ({
+      default: Login,
+    }))
+    .catch(catchPageError),
 );
 
 const ResetPassword = lazy(() =>
-  import('../features/user/ResetPassword').then(({ ResetPassword }) => ({
-    default: ResetPassword,
-  })),
+  import('../features/user/ResetPassword')
+    .then(({ ResetPassword }) => ({
+      default: ResetPassword,
+    }))
+    .catch(catchPageError),
 );
 
 const Registration = lazy(() =>
-  import('../features/user/Registration').then(({ Registration }) => ({
-    default: Registration,
-  })),
+  import('../features/user/Registration')
+    .then(({ Registration }) => ({
+      default: Registration,
+    }))
+    .catch(catchPageError),
 );
 
 const Page404 = lazy(() =>
-  import('./Page404').then(({ Page404 }) => ({
-    default: Page404,
-  })),
+  import('./Page404')
+    .then(({ Page404 }) => ({
+      default: Page404,
+    }))
+    .catch(catchPageError),
 );
 
 const buttons: {
