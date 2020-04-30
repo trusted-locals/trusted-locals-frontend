@@ -4,16 +4,10 @@ export const PROFILE_IMAGE_OLIVER_MICKE = process.env.PUBLIC_URL + '/img/oliver-
 export const PROFILE_IMAGE_EMILY_ROSE28 =
   'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=60';
 
-// https://stackoverflow.com/questions/9035627/elegant-method-to-generate-array-of-random-dates-within-two-dates/9035732#9035732
-const generateRandomDate = (start = new Date(Date.now() - 100000000), end = new Date()): number =>
-  +new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-
-const generateRandomCommentDate = (): number => generateRandomDate(new Date(Date.now() - 1000000));
-
 export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
   1: {
     categories: ['news'] as Category[],
-    date: generateRandomDate(),
+    date: 1588136357988,
     postID: 1,
     rating: 23,
     text: 'VCU Developed COVID-19 test',
@@ -26,7 +20,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
   },
   2: {
     categories: ['grocery'] as Category[],
-    date: generateRandomDate(),
+    date: 1588149191407,
     postID: 2,
     rating: 72,
     text:
@@ -40,7 +34,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
       {
         comment: 'do you know when can the next delivery be expected?',
         commentID: 104,
-        date: generateRandomCommentDate(),
+        date: 1588226948308,
         userImageURL: PROFILE_IMAGE_OLIVER_MICKE,
         username: 'olivermicke',
       },
@@ -52,12 +46,12 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
       {
         comment: 'Only one box left when I was there at 11',
         commentID: 101,
-        date: generateRandomCommentDate(),
+        date: 1588227159951,
         userImageURL: PROFILE_IMAGE_EMILY_ROSE28,
         username: 'emily_rose28',
       },
     ],
-    date: generateRandomDate(),
+    date: 1588212413593,
     postID: 3,
     rating: 74,
     text:
@@ -70,7 +64,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
   },
   4: {
     categories: ['advice'] as Category[],
-    date: generateRandomDate(),
+    date: 1588130783737,
     postID: 4,
     rating: 44,
     text: "Especially in areas with community-spread, it's recommended to wear face masks whenever possible.",
@@ -83,7 +77,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
       {
         comment: "In case you don't have masks yet, home depot in henrico has got some available",
         commentID: 102,
-        date: generateRandomCommentDate(),
+        date: 1588227470790,
         userImageURL: PROFILE_IMAGE_EMILY_ROSE28,
         username: 'emily_rose28',
       },
@@ -91,7 +85,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
   },
   5: {
     categories: ['news', 'grocery'] as Category[],
-    date: generateRandomDate(),
+    date: 1588154950247,
     postID: 5,
     rating: 54,
     text:
@@ -105,7 +99,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
       {
         comment: "That's great to hear because I work at Target at broad street and we are running out of supplies",
         commentID: 106,
-        date: generateRandomCommentDate(),
+        date: 1588227254358,
         userImageURL: PROFILE_IMAGE_EMILY_ROSE28,
         username: 'emily_rose28',
       },
@@ -114,7 +108,7 @@ export const MOCKED_POSTS: { [postID in Post['postID']]: Post } = {
   6: {
     categories: ['news'] as Category[],
     comments: [],
-    date: generateRandomDate(),
+    date: 1588216365624,
     postID: 6,
     rating: 84,
     text: 'Service disconnection has just been suspended!',
