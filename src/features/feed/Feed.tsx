@@ -28,7 +28,7 @@ export const Feed: FC<Props> = ({ category }: Props) => {
     if (async.error === null && posts === null) {
       dispatch(loadRequested(category));
     }
-  }, [async, category, dispatch, posts]);
+  }, [async.error, category, dispatch, posts]);
 
   if (async.error) {
     // TODO:
